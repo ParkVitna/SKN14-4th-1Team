@@ -1,0 +1,85 @@
+:root { --hero-min-h: 92vh; }
+
+body { background:#fff; }
+
+/* 브랜드 로고 */
+.brand_logo{
+  position: fixed;               /* 레이아웃 영향 없음 */
+  top: 12px; left: 14px;
+  z-index: 1000;
+  pointer-events: none;          /* 주변 클릭 방해 X */
+}
+
+/* 실제 클릭 요소 */
+.brand_logo{
+  pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 12px;
+  color: var(--nw-green);        /* 아이콘 색 (currentColor) */
+  transition: transform .15s ease;
+}
+.brand_logo .brand_logo_link,
+.brand_logo .brand_logo_link:visited,
+.brand_logo .brand_logo_link:hover,
+.brand_logo .brand_logo_link:active {
+  color: #000000;            
+  text-decoration: none;      
+}
+
+/* 아이콘/텍스트 크기 (필요 시만 조절) */
+.brand_logo_emoji{ font-size: 18px; line-height: 1; }
+.brand_logo_text{
+  font-weight: 800;              /* 폰트는 기존 것 사용 */
+  font-size: 18px;
+  letter-spacing: .2px;
+  color: var(--nw-text);
+}
+
+/* 상단 고정 버튼: 영역은 클릭 막고 버튼만 클릭 가능 */
+.login { pointer-events:none; }
+.login .btn { pointer-events:auto; }
+
+.btn-custom-yellow {
+  background-color: #F1C40F;
+  color: #fff;
+  border: none;
+}
+.btn-custom-yellow:hover {
+  background-color: #27AE60; /* hover 시 활력 있는 초록색 */
+  color: #fff;
+}
+
+.main_text{
+  position: relative;
+  min-height: var(--hero-min-h);
+  display: grid;
+  place-items: center;      /* 가로/세로 중앙 */
+  text-align: center;
+  padding: 3rem 1rem;
+  overflow: hidden;
+}
+.main_text-inner{
+  max-width: 880px;
+  width: 100%;
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.main_text::after{
+  content: "🌿";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;                 /* 본문 뒤 */
+  pointer-events: none;
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji", sans-serif;
+  font-size: clamp(160px, 34vw, 560px);  /* 크기 */
+  line-height: 1;
+  opacity: .10;               /* 옅게 (0.06~0.14 조절) */
+  filter: blur(.2px);         /* 살짝 부드럽게 (선택) */
+}
+/* 본문은 위로 */
+.main_text > * { position:relative; z-index:1; }
