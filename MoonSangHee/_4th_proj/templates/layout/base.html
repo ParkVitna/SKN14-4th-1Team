@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NutriWise{% endblock %}</title>
+
+  <!-- 공통 네비 CSS -->
+  <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  {% include 'layout/nav.html' %}
+
+  <main class="nw-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 모바일 네비 토글 -->
+  <script>
+    const burger = document.querySelector('.nw-burger');
+    const header = document.querySelector('.nw-header');
+    burger?.addEventListener('click', () => {
+      header.classList.toggle('is-open');
+      burger.setAttribute('aria-expanded', header.classList.contains('is-open'));
+    });
+  </script>
+
+  {% block extra_body %}{% endblock %}
+</body>
+</html>

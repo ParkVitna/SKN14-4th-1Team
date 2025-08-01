@@ -1,0 +1,140 @@
+/* =========================
+   NutriWise - NAV (final)
+   ========================= */
+:root{
+  --nw-green:#27AE60;
+  --nw-yellow:#F1C40F;
+  --nw-text:#1f2937;      /* 다크 그레이 */
+  --nw-muted:#6b7280;     /* 서브 텍스트 */
+  --nw-border:#e5e7eb;    /* 라인 */
+  --nw-bg:#ffffff;
+}
+
+*{ box-sizing:border-box; }
+html,body{
+  margin:0;
+  font-family:"Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--nw-text);
+}
+
+/* ===== Header: 2행 그리드 =====
+   1행: 좌 로고 / 우 액션 유지
+   2행: 중앙 네비게이션 (전체 폭)
+*/
+.nw-header{
+  position: sticky; top: 0; z-index: 1000;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* brand | spacer | actions */
+  grid-template-rows: auto auto;        /* row1: brand/actions, row2: nav */
+  align-items: center;
+  gap: 12px 16px;
+  padding: 12px 20px 8px;
+  background: var(--nw-bg);
+}
+
+/* ===== Brand (좌측 고정) ===== */
+.nw-brand{
+  grid-column:1; grid-row:1;
+  display:inline-flex; align-items:center; gap:8px;
+  text-decoration:none;
+}
+.nw-brand__emoji{ font-size:18px; line-height:1; color:var(--nw-green); }
+.nw-brand__text{
+  font-weight: 800;              /* 폰트는 기존 것 사용 */
+  font-size: 18px;
+  letter-spacing: .2px;
+  color: var(--nw-text);
+}
+
+/* 로고가 어떤 페이지에서도 파란 링크/밑줄로 바뀌지 않도록 강한 덮어쓰기 */
+.nw-header .nw-brand,
+.nw-header .nw-brand:visited,
+.nw-header .nw-brand:hover,
+.nw-header .nw-brand:active{
+  color: var(--nw-text) !important;
+  text-decoration: none !important;
+}
+.nw-header .nw-brand__emoji{ color: var(--nw-green) !important; }
+
+/* ===== Actions (우측 고정) ===== */
+.nw-actions{
+  grid-column:3; grid-row:1;
+  justify-self:end;
+  display:flex; gap:8px; align-items:center;
+}
+.nw-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; padding:0 12px;
+  border-radius:10px; border:0; cursor:pointer;
+  font-weight:700; font-size:14px; text-decoration:none;
+  color:#fff; background:var(--nw-green);
+  transition: filter .15s ease;
+}
+.nw-btn:hover{ filter:brightness(.95); }
+.nw-btn--yellow{ background:var(--nw-yellow); }
+.nw-inline-form{ display:inline; }
+
+/* ===== Nav (2행 전체 폭 중앙 정렬) ===== */
+.nw-nav{
+  grid-column:1 / -1; grid-row:2;
+  display:flex; gap:12px; justify-content:center;
+  padding: 6px 0 10px;
+  border-top:1px solid var(--nw-border);
+  border-bottom:1px solid var(--nw-border);
+}
+.nw-nav__link{
+  position:relative;
+  padding:10px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  color:var(--nw-muted);
+  font-weight:700; font-size:14px;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.nw-nav__link:hover{
+  background:#f8fafc;
+  color:var(--nw-text);
+}
+.nw-nav__link.is-active{
+  color:var(--nw-green);
+  background:rgba(39,174,96,.10);
+  box-shadow: inset 0 0 0 1px rgba(39,174,96,.25);
+}
+
+/* ===== Burger(모바일) ===== */
+.nw-burger{
+  display:none;
+  background:none; border:0; padding:8px; margin-left:8px; cursor:pointer;
+}
+.nw-burger span{
+  display:block; width:22px; height:2px; background:#111; margin:4px 0; border-radius:2px;
+}
+
+/* ===== Page padding (공통) ===== */
+.nw-main{ padding:40px 20px; }
+
+/* ===== Focus visible ===== */
+.nw-header a:focus{ outline:none; }
+.nw-header a:focus-visible{
+  outline:2px solid rgba(39,174,96,.55);
+  outline-offset:3px; border-radius:8px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px){
+  /* 모바일에서 네비/액션은 접고 버거 표시 */
+  .nw-burger{ display:block; grid-column:2; grid-row:1; justify-self:center; }
+  .nw-actions{ display:none; }
+  .nw-nav{ display:none; }
+
+  /* 버거 토글 시 열기 */
+  .nw-header.is-open .nw-nav{
+    display:flex; flex-direction:column; gap:8px;
+    border-top:1px solid var(--nw-border);
+    border-bottom:1px solid var(--nw-border);
+    padding: 10px 20px;
+  }
+  .nw-header.is-open .nw-actions{
+    display:flex; justify-self:end; grid-column:3; grid-row:1;
+  }
+}

@@ -1,0 +1,34 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}영양제 검색하기 · NutriWise{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="nw-search">
+  <h1 class="nw-search__title">원하는 영양제를 검색해보세요</h1>
+
+  <form action="#" method="get" class="nw-search__form" enctype="multipart/form-data">
+    <input type="text" name="q" class="nw-search__input" placeholder="제품명 / 성분 / 브랜드로 검색" value="{{ request.GET.q }}">
+    
+    <!-- 이미지/카메라 업로드 -->
+    <label class="nw-search__btn nw-search__btn--icon" title="이미지로 검색">
+      <input type="file" name="image" accept="image/*" class="nw-search__file" onchange="this.form.submit()">
+      📷
+    </label>
+
+    <button type="submit" class="nw-search__btn nw-search__btn--primary">
+      🔍 검색
+    </button>
+  </form>
+
+  <!-- (선택) 인기 검색어, 최근 검색어 슬롯 -->
+  <div class="nw-search__meta">
+    <span class="tag">비타민D</span>
+    <span class="tag">오메가3</span>
+    <span class="tag">마그네슘</span>
+  </div>
+</section>
+{% endblock %}
