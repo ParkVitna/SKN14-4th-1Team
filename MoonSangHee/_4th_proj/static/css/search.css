@@ -1,0 +1,48 @@
+:root{
+  --nw-green:#27AE60; --nw-text:#1f2937; --nw-border:#e5e7eb;
+}
+
+/* 검색 섹션 */
+.nw-search{ max-width: 880px; margin: 40px auto; }
+.nw-search__title{ font-size: 28px; font-weight: 900; margin: 10px 0 20px; text-align: center; color: var(--nw-text); }
+
+/* 검색 폼 */
+.nw-search__form{
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 1px solid var(--nw-border);
+  border-radius: 999px; padding: 6px 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+}
+.nw-search__input{
+  flex: 1; border: none; outline: none;
+  font-size: 16px; padding: 10px 12px; border-radius: 999px;
+}
+
+/* 버튼 공통 */
+.nw-search__btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  border:none; border-radius:999px; cursor:pointer;
+  padding:10px 14px; font-weight:700; font-size:14px;
+  background:transparent; color:var(--nw-green);
+}
+
+/* 파일 input 숨김 */
+.nw-search__file{ display:none; }
+
+/* 아이콘 업로드 버튼 */
+.nw-search__btn--icon{
+  width:42px; height:42px; padding:0; font-size:18px;
+  background: rgba(39,174,96,.08);
+}
+.nw-search__btn--icon:hover{ background: rgba(39,174,96,.14); }
+
+/* 검색 제출 버튼 */
+.nw-search__btn--primary{
+  background: var(--nw-green); color:#fff; padding:10px 18px;
+}
+.nw-search__btn--primary:hover{ filter: brightness(.96); }
+
+/* 메타 태그(선택) */
+.nw-search__meta{ margin-top: 14px; display:flex; gap:8px; justify-content:center; }
+.tag{ font-size:12px; color:#374151; background:#f3f4f6; border-radius:999px; padding:6px 10px; }
+.tag:hover{ background:#e5e7eb; cursor:pointer; }

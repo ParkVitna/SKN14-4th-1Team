@@ -1,0 +1,75 @@
+:root{
+  --nw-green:#27AE60;
+  --nw-text:#1f2937;
+  --nw-border:#e5e7eb;
+}
+
+/* 페이지 가운데 정렬 래퍼 */
+.chat-wrap{
+  max-width: 960px;          /* 원하는 중앙 폭 */
+  width: min(92vw, 960px);   /* 작은 화면에서는 자동 축소 */
+  margin: 24px auto;         /* 수평 가운데 */
+  padding: 0 16px;           /* 좌우 여백 */
+}
+
+/* 채팅 박스 */
+.chat{
+  background:#fff;
+  border:1px solid var(--nw-border);
+  border-radius:14px;
+  display:grid;
+  grid-template-rows: 1fr auto;
+  min-height: 68vh;
+}
+
+/* 스크롤 영역 */
+.chat_scroll{
+  padding:18px;
+  overflow:auto;
+  scroll-behavior:smooth;
+}
+
+/* 메시지 */
+.msg{ display:flex; gap:10px; margin-bottom:14px; align-items:flex-start; }
+.msg .avatar{ width:28px; height:28px; display:grid; place-items:center; font-size:18px; }
+.bubble{
+  background:#f8fafc; border:1px solid var(--nw-border);
+  padding:10px 12px; border-radius:12px; max-width:70ch; line-height:1.55;
+}
+.msg--user{ flex-direction:row-reverse; }
+.msg--user .bubble{ background:rgba(39,174,96,.10); border-color:rgba(39,174,96,.25); }
+
+/* 타이핑 */
+.typing{ display:flex; gap:4px; align-items:center; margin-left:38px; }
+.typing span{
+  width:6px; height:6px; border-radius:50%; background:#cbd5e1;
+  display:inline-block; animation:bounce 1s infinite ease-in-out;
+}
+.typing span:nth-child(2){ animation-delay:.15s } 
+.typing span:nth-child(3){ animation-delay:.3s }
+@keyframes bounce{ 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-4px)} }
+
+/* 입력영역 */
+.composer{
+  display:grid; grid-template-columns:1fr auto auto;
+  gap:8px; padding:10px; border-top:1px solid var(--nw-border);
+}
+.composer__input{
+  border:1px solid var(--nw-border); border-radius:999px;
+  padding:12px 14px; font-size:15px; outline:none;
+}
+.icon-btn{
+  width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
+  background:rgba(39,174,96,.08); cursor:pointer; user-select:none;
+}
+.icon-btn:hover{ background:rgba(39,174,96,.14); }
+.cta{
+  border:none; border-radius:999px; padding:0 18px; font-weight:800;
+  background:var(--nw-green); color:#fff; cursor:pointer;
+}
+.cta:hover{ filter:brightness(.96); }
+
+/* 반응형 */
+@media (max-width: 640px){
+  .composer{ position:sticky; bottom:0; background:#fff; }
+}

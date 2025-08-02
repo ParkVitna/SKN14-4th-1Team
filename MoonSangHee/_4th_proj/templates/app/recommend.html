@@ -1,0 +1,71 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}영양제 추천받기 · NutriWise{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/recommend.css' %}">
+{% endblock %}
+
+{% block content %}
+  <!-- 중앙 정렬 래퍼 -->
+  <section class="chat-wrap">
+    <section class="chat" aria-label="영양제 추천 챗봇">
+      <div class="chat_scroll" id="chat-scroll">
+        <div class="msg msg--bot">
+          <div class="avatar">🌿</div>
+          <div class="bubble">
+            안녕하세요! 건강 목표나 증상을 알려주시면 맞춤 영양제를 추천해 드릴게요. <br>
+            마이페이지에 입력된 기본 정보를 기반으로 추천해 드립니다. <br>
+            변경된 사항은 언제든지 마이페이지에서 변경 가능해요. <br>
+            예) “피곤해서 오후에 집중이 안 돼요”, “수면의 질을 높이고 싶어요”
+          </div>
+        </div>
+
+        <!-- 타이핑 표시 -->
+        <div class="typing" id="typing" hidden>
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- 입력창 -->
+      <form class="composer" id="composer" autocomplete="off">
+        <input type="text" id="prompt" class="composer__input"
+               placeholder="메시지를 입력하세요… (예: 최근 혈액검사에서 비타민D 낮았어요)">
+        <button type="submit" class="cta">보내기</button>
+      </form>
+    </section>
+  </section>
+{% endblock %}
+
+{% block extra_body %}
+<script>
+  const composer = document.getElementById('composer');
+  const scrollBox = document.getElementById('chat-scroll');
+  const typing = document.getElementById('typing');
+
+  function addMsg(role, text){
+    const wrap = document.createElement('div');
+    wrap.className = 'msg ' + (role === 'user' ? 'msg--user' : 'msg--bot');
+    wrap.innerHTML = `<div class="avatar">${role==='user'?'🙂':'🌿'}</div><div class="bubble">${text}</div>`;
+    scrollBox.appendChild(wrap);
+    scrollBox.scrollTop = scrollBox.scrollHeight;
+  }
+
+  composer.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const input = document.getElementById('prompt');
+    const text = input.value.trim();
+    if(!text) return;
+    addMsg('user', text);
+    input.value = '';
+    typing.hidden = false;
+    scrollBox.scrollTop = scrollBox.scrollHeight;
+
+    setTimeout(()=>{
+      typing.hidden = true;
+      addMsg('bot', '알겠습니다. 해당 정보를 반영해 추천 리스트를 준비할게요.');
+    }, 900);
+  });
+</script>
+{% endblock %}
+

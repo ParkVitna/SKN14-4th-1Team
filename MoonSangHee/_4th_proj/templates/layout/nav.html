@@ -1,0 +1,40 @@
+<header class="nw-header">
+  <!-- 좌: 로고 -->
+  <a href="#" class="nw-brand" aria-label="홈으로">
+    <span class="nw-brand__emoji" aria-hidden="true">🌿</span>
+    <span class="nw-brand__text">NutriWise</span>
+  </a>
+
+  <!-- 중앙: 탭형 네비 (2행) -->
+  <nav class="nw-nav">
+    <a href="{% url 'app:home' %}"
+       class="nw-nav__link {% if request.resolver_match.url_name == 'home' %}is-active{% endif %}">
+       HOME
+    </a>
+    <a href="{% url 'app:search' %}"
+       class="nw-nav__link {% if request.resolver_match.url_name == 'search' %}is-active{% endif %}">
+       영양제 검색하기
+    </a>
+    <a href="{% url 'app:recommend' %}"
+       class="nw-nav__link {% if request.resolver_match.url_name == 'recommend' %}is-active{% endif %}">
+       나만의 영양제 추천받기
+    </a>
+  </nav>
+
+  <!-- 우: 마이페이지/로그인 -->
+  <div class="nw-actions">
+    {% if request.user.is_authenticated %}
+      <a class="nw-btn" href="#">마이페이지</a>
+      <form method="post" action="#" class="nw-inline-form">{% csrf_token %}
+        <button type="submit" class="nw-btn nw-btn--yellow">로그아웃</button>
+      </form>
+    {% else %}
+      <a class="nw-btn nw-btn--yellow" href="#">로그인</a>
+    {% endif %}
+  </div>
+
+  <!-- 모바일 버거 -->
+  <button class="nw-burger" aria-label="메뉴 열기" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
