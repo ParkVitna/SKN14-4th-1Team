@@ -1,0 +1,22 @@
+{% extends "layout/base.html" %}
+{% block title %}NutriWise - OCR 검색{% endblock %}
+{% block content %}
+<h2 class="mb-4">📷 사진 속 영양제 정보</h2>
+<form>
+  <div class="mb-3">
+    <label for="upload" class="form-label">💊 영양제 사진을 업로드하세요</label>
+    <input class="form-control" type="file" id="upload" accept="image/*" disabled>
+  </div>
+</form>
+<div class="card mt-4">
+  <div class="card-header">🔍 인식된 제품 정보 (예시)</div>
+  <div class="card-body">
+    <h5>센트룸 포맨</h5>
+    <ul>
+      <li>주요 성분: 비타민B, 아연, 비타민D 등</li>
+      <li>복용법: 1일 1정</li>
+      <li>효능: 남성 건강, 에너지</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
