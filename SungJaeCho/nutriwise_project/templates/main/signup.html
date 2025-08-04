@@ -1,0 +1,44 @@
+{% extends "layout/base.html" %}
+{% block title %}NutriWise - 회원가입{% endblock %}
+{% block content %}
+<h2 class="mb-4">회원가입</h2>
+<form>
+  <div class="mb-3">
+    <label for="username" class="form-label">이름</label>
+    <input type="text" class="form-control" id="username" placeholder="이름 입력" required disabled>
+  </div>
+  <div class="mb-3">
+    <label for="age" class="form-label">나이</label>
+    <input type="number" class="form-control" id="age" min="1" max="120" required disabled>
+  </div>
+  <div class="mb-3">
+    <label for="gender" class="form-label">성별</label>
+    <select class="form-select" id="gender" required disabled>
+      <option value="">선택</option>
+      <option value="남성">남성</option>
+      <option value="여성">여성</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="pregnancy" class="form-label">임신 여부</label>
+    <select class="form-select" id="pregnancy" required disabled>
+      <option value="">선택</option>
+      <option value="예">예</option>
+      <option value="아니오">아니오</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">건강 관심사</label><br>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="goal1" disabled>
+      <label class="form-check-label" for="goal1">면역력</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="goal2" disabled>
+      <label class="form-check-label" for="goal2">피부</label>
+    </div>
+    <!-- 필요시 더 추가 -->
+  </div>
+  <button type="submit" class="btn btn-primary" disabled>회원가입</button>
+</form>
+{% endblock %}

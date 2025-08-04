@@ -38,8 +38,8 @@ html,body{
   display:inline-flex; align-items:center; gap:8px;
   text-decoration:none;
 }
-.nw-brand__emoji{ font-size:18px; line-height:1; color:var(--nw-green); }
-.nw-brand__text{
+.nw-brand_emoji{ font-size:18px; line-height:1; color:var(--nw-green); }
+.nw-brand_text{
   font-weight: 800;              /* 폰트는 기존 것 사용 */
   font-size: 18px;
   letter-spacing: .2px;
@@ -54,7 +54,7 @@ html,body{
   color: var(--nw-text) !important;
   text-decoration: none !important;
 }
-.nw-header .nw-brand__emoji{ color: var(--nw-green) !important; }
+.nw-header .nw-brand_emoji{ color: var(--nw-green) !important; }
 
 /* ===== Actions (우측 고정) ===== */
 .nw-actions{
@@ -82,7 +82,7 @@ html,body{
   border-top:1px solid var(--nw-border);
   border-bottom:1px solid var(--nw-border);
 }
-.nw-nav__link{
+.nw-nav_link{
   position:relative;
   padding:10px 14px;
   border-radius:999px;
@@ -95,7 +95,7 @@ html,body{
   background:#f8fafc;
   color:var(--nw-text);
 }
-.nw-nav__link.is-active{
+.nw-nav_link.is-active{
   color:var(--nw-green);
   background:rgba(39,174,96,.10);
   box-shadow: inset 0 0 0 1px rgba(39,174,96,.25);

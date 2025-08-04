@@ -1,0 +1,54 @@
+{% extends "../layout/base.html" %}
+
+{% block style %}
+    <style>
+        .feedback.error {
+            color: red;
+        }
+        .feedback.success {
+            color: green;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+{% comment %} <div class="container my-3"> {% endcomment %}
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="">
+            <h4>👤 회원가입 </h4>
+            <div class="mb-3">
+                <label for="username">사용자 이름</label>
+                <input type="text" class="form-control" name="username" id="username" value="">
+            </div>
+            <div class="mb-3">
+                <label for="password1">비밀번호</label>
+                <input type="password" class="form-control" name="password1" id="password1" value="">
+            </div>
+            <div class="mb-3">
+                <label for="password2">비밀번호 확인</label>
+                <input type="password" class="form-control" name="password2" id="password2" value="">
+            </div>
+            <div class="mb-3">
+                <label for="email">이메일</label>
+                <input type="text" class="form-control" name="email" id="email" value="">
+            </div>
+            <div class="mb-3">
+                <label for="birthday">생일</label>
+                <input type="date" class="form-control" name="birthday" id="birthday" value="">
+            </div>
+            <div class="mb-3">
+                <label for="profile" class="form-label">프로필</label>
+                <input class="form-control" type="file" id="profile" name="profile">
+            </div>
+    </div>
+    <div class="col-md-6">
+        <!-- 사용자 정보 입력 -->
+         {% include "../layout/user_info_form.html" %}
+    </div>    
+
+            <button type="submit" class="btn btn-primary">회원가입하기</button>
+        
+        </form>
+    </div>
+{% endblock %}

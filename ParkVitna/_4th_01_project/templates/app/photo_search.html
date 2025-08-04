@@ -1,0 +1,371 @@
+{% extends "../layout/base.html" %}
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/photo_search.css' %}">
+{% endblock style %}
+
+{% block content %}
+    <div class="container-fluid py-4">
+        <div class="main-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-camera me-3"></i>사진 검색 분석</h1>
+                <p class="lead mb-0">영양제 사진을 업로드하여 제품 정보를 확인하세요</p>
+            </div>
+
+            <div class="container p-4">
+                <!-- File Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <h4>영양제 사진을 업로드하세요</h4>
+                    <p class="text-muted mb-4">JPG, JPEG, PNG 파일을 지원합니다 (최대 10MB)</p>
+                    <input type="file" class="file-input" accept="image/*" id="photoUpload">
+                    <button class="btn btn-gradient" onclick="document.getElementById('photoUpload').click();">
+                        <i class="fas fa-upload me-2"></i>파일 선택
+                    </button>
+                    <p class="mt-3 text-muted small">또는 파일을 여기로 드래그하세요</p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress" id="uploadProgress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="imagePreview" style="display: none;">
+                    <h5 class="mt-4 mb-3"><i class="fas fa-image me-2"></i>업로드된 이미지</h5>
+                    <div class="image-preview">
+                        <img id="uploadedImage" alt="업로드된 이미지">
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button class="btn btn-gradient" id="analyzeButton">
+                            <i class="fas fa-search me-2"></i>이미지 분석하기
+                        </button>
+                        <button class="btn btn-outline-secondary ms-2" id="resetButton">
+                            <i class="fas fa-redo me-2"></i>다시 업로드
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5 class="mt-3">이미지를 분석하고 있습니다...</h5>
+                    <p class="text-muted">잠시만 기다려주세요</p>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="analysis-results" id="analysisResults" style="display: none;">
+                    <h5 class="mb-4"><i class="fas fa-microscope me-2"></i>분석 결과</h5>
+
+                    <!-- Detected Text -->
+                    <div class="detected-text">
+                        <h6><i class="fas fa-text-width me-2"></i>인식된 텍스트</h6>
+                        <p id="detectedText">"비타민 C 1000mg", "오메가-3", "종합비타민"</p>
+                    </div>
+
+                    <!-- Product Information -->
+                    <div class="accordion" id="productAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#product1">
+                                    <i class="fas fa-capsules me-2"></i>비타민 C 1000mg
+                                </button>
+                            </h2>
+                            <div id="product1" class="accordion-collapse collapse show" data-bs-parent="#productAccordion">
+                                <div class="accordion-body">
+                                    <div class="product-info-card">
+                                        <h6><i class="fas fa-info-circle me-2"></i><strong>제품 정보</strong></h6>
+                                        <p><strong>주요 성분:</strong> 비타민C (아스코르빈산) 1000mg</p>
+                                        <p><strong>기능성:</strong></p>
+                                        <ul>
+                                            <li>면역력 증진에 도움을 줄 수 있음</li>
+                                            <li>결합조직 형성과 기능유지에 필요</li>
+                                            <li>철의 흡수에 필요</li>
+                                            <li>항산화 작용을 하여 유해산소로부터 세포를 보호하는데 필요</li>
+                                        </ul>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <p><strong>일일 권장량:</strong> 성인 100mg</p>
+                                                <p><strong>상한섭취량:</strong> 2,000mg</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>복용법:</strong> 1일 1회, 1정</p>
+                                                <p><strong>복용시간:</strong> 식후 복용 권장</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="safety-warning">
+                                            <h6><i class="fas fa-exclamation-triangle me-2"></i>주의사항</h6>
+                                            <ul class="mb-0">
+                                                <li>고용량 복용 시 위장장애, 설사 등이 발생할 수 있습니다</li>
+                                                <li>신장결석 병력이 있는 경우 의사와 상담 후 복용하세요</li>
+                                                <li>철분제와 함께 복용 시 철분 흡수가 증가할 수 있습니다</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product2">
+                                    <i class="fas fa-fish me-2"></i>오메가-3
+                                </button>
+                            </h2>
+                            <div id="product2" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                                <div class="accordion-body">
+                                    <div class="product-info-card">
+                                        <h6><i class="fas fa-info-circle me-2"></i><strong>제품 정보</strong></h6>
+                                        <p><strong>주요 성분:</strong> EPA, DHA (오메가-3 지방산)</p>
+                                        <p><strong>기능성:</strong></p>
+                                        <ul>
+                                            <li>혈중 중성지질 개선에 도움을 줄 수 있음</li>
+                                            <li>혈행 개선에 도움을 줄 수 있음</li>
+                                            <li>기억력 개선에 도움을 줄 수 있음</li>
+                                            <li>건조한 눈을 개선하여 눈 건강에 도움을 줄 수 있음</li>
+                                        </ul>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <p><strong>일일 권장량:</strong> EPA+DHA 합 500-2000mg</p>
+                                                <p><strong>원료:</strong> 어류 유래</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>복용법:</strong> 1일 1-2회</p>
+                                                <p><strong>복용시간:</strong> 식후 복용</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="safety-warning">
+                                            <h6><i class="fas fa-exclamation-triangle me-2"></i>주의사항</h6>
+                                            <ul class="mb-0">
+                                                <li>생선 알레르기가 있는 경우 주의하세요</li>
+                                                <li>항응고제 복용 시 의사와 상담하세요</li>
+                                                <li>수술 전 2주간 복용을 중단하세요</li>
+                                                <li>소화불량, 트림 등의 부작용이 있을 수 있습니다</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#product3">
+                                    <i class="fas fa-pills me-2"></i>종합비타민
+                                </button>
+                            </h2>
+                            <div id="product3" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                                <div class="accordion-body">
+                                    <div class="product-info-card">
+                                        <h6><i class="fas fa-info-circle me-2"></i><strong>제품 정보</strong></h6>
+                                        <p><strong>주요 성분:</strong> 비타민 A, B군, C, D, E, 미네랄</p>
+                                        <p><strong>기능성:</strong></p>
+                                        <ul>
+                                            <li>전반적인 영양소 공급</li>
+                                            <li>에너지 대사에 필요</li>
+                                            <li>면역기능 유지에 필요</li>
+                                            <li>정상적인 성장과 발달에 필요</li>
+                                        </ul>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <p><strong>복용법:</strong> 1일 1회, 1정</p>
+                                                <p><strong>복용시간:</strong> 아침 식후</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>대상:</strong> 성인 남녀</p>
+                                                <p><strong>보관:</strong> 서늘하고 건조한 곳</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="safety-warning">
+                                            <h6><i class="fas fa-exclamation-triangle me-2"></i>주의사항</h6>
+                                            <ul class="mb-0">
+                                                <li>다른 비타민제와 중복 복용 시 과량 섭취 주의</li>
+                                                <li>철분 함유 시 커피, 차와 함께 복용 피하세요</li>
+                                                <li>임신, 수유 중인 경우 전문의와 상담</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="alert alert-info mt-4">
+                        <h5><i class="fas fa-lightbulb me-2"></i>이용 안내</h5>
+                        <ul class="mb-0">
+                            <li>분석 결과는 식품의약품안전처 건강기능식품 데이터베이스를 기반으로 합니다</li>
+                            <li>정확한 제품 정보는 제품 포장지나 제조사에 확인하시기 바랍니다</li>
+                            <li>복용 전 의사나 약사와 상담하시기 바랍니다</li>
+                            <li>개인의 건강 상태에 따라 적합성이 다를 수 있습니다</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    // DOM elements
+    const uploadArea = document.getElementById('uploadArea');
+    const photoUpload = document.getElementById('photoUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadedImage = document.getElementById('uploadedImage');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const analyzeButton = document.getElementById('analyzeButton');
+    const resetButton = document.getElementById('resetButton');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const analysisResults = document.getElementById('analysisResults');
+    const detectedText = document.getElementById('detectedText');
+
+    // Event listeners
+    photoUpload.addEventListener('change', handleFileSelect);
+    uploadArea.addEventListener('click', () => photoUpload.click());
+    uploadArea.addEventListener('dragover', handleDragOver);
+    uploadArea.addEventListener('dragleave', handleDragLeave);
+    uploadArea.addEventListener('drop', handleDrop);
+    analyzeButton.addEventListener('click', analyzeImage);
+    resetButton.addEventListener('click', resetUpload);
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            processFile(file);
+        }
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        uploadArea.classList.add('dragover');
+    }
+
+    function handleDragLeave(event) {
+        event.preventDefault();
+        uploadArea.classList.remove('dragover');
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        uploadArea.classList.remove('dragover');
+
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            processFile(files[0]);
+        }
+    }
+
+    function processFile(file) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('이미지 파일만 업로드할 수 있습니다.');
+            return;
+        }
+
+        // Validate file size (10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('파일 크기는 10MB 이하여야 합니다.');
+            return;
+        }
+
+        // Show progress
+        showUploadProgress();
+
+        // Create file reader
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            uploadedImage.src = e.target.result;
+            showImagePreview();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function showUploadProgress() {
+        uploadProgress.style.display = 'block';
+        const progressBar = uploadProgress.querySelector('.progress-bar');
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    uploadProgress.style.display = 'none';
+                }, 500);
+            }
+            progressBar.style.width = progress + '%';
+        }, 100);
+    }
+
+    function showImagePreview() {
+        uploadArea.style.display = 'none';
+        imagePreview.style.display = 'block';
+        analysisResults.style.display = 'none';
+    }
+
+    function analyzeImage() {
+        // Hide image preview and show loading
+        imagePreview.style.display = 'none';
+        loadingSpinner.style.display = 'block';
+
+        // Simulate analysis delay
+        setTimeout(() => {
+            loadingSpinner.style.display = 'none';
+            showAnalysisResults();
+        }, 3000);
+    }
+
+    function showAnalysisResults() {
+        // Simulate OCR results
+        const sampleTexts = [
+            '"비타민 C 1000mg", "오메가-3 EPA 180mg DHA 120mg", "종합비타민"',
+            '"멀티비타민 미네랄", "비타민D3 1000IU", "마그네슘 400mg"',
+            '"프로바이오틱스", "유산균 100억마리", "비피더스균"',
+            '"글루코사민 1500mg", "MSM 1000mg", "콘드로이틴"'
+        ];
+
+        const randomText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+        detectedText.textContent = randomText;
+
+        analysisResults.style.display = 'block';
+
+        // Scroll to results
+        analysisResults.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetUpload() {
+        photoUpload.value = '';
+        uploadArea.style.display = 'block';
+        imagePreview.style.display = 'none';
+        analysisResults.style.display = 'none';
+        loadingSpinner.style.display = 'none';
+        uploadProgress.style.display = 'none';
+
+        // Reset progress bar
+        const progressBar = uploadProgress.querySelector('.progress-bar');
+        progressBar.style.width = '0%';
+    }
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        document.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+</script>
+{% endblock script %}
