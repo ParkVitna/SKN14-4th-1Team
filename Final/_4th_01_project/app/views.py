@@ -1,6 +1,9 @@
 from django.shortcuts import render
 
-def index(request):
+def home(request):
+    return render(request, 'app/home.html')
+
+def main(request):
     return render(request, 'app/main.html')
 
 def chat_recommand(request):
