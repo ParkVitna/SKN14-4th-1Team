@@ -1,0 +1,10 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+  <h2>OCR 이미지 업로드</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image">
+    <button type="submit">업로드</button>
+  </form>
+{% endblock %}
