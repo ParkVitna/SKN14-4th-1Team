@@ -1,5 +1,17 @@
+{% block style %}
+    <style>
+        .feedback.error {
+            color: red;
+        }
+        .feedback.success {
+            color: green;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
 <!-- 사용자 정보 입력 -->
-<div class="user-info-box p-4 rounded shadow-sm me-4">
+<div>
     {% comment %} <h4>👤 개인정보 입력</h4> {% endcomment %}
     <form>
         <div class="mb-3">
@@ -41,3 +53,4 @@
     // 초기 상태 반영
     document.addEventListener("DOMContentLoaded", togglePregnantCheckbox);
 </script>
+{% endblock %}

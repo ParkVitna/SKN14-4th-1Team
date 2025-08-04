@@ -6,7 +6,7 @@
 create user 'django'@'%' identified by 'django';
 
 # qnadb 생성
-create database qnadb character set utf8mb4 collate utf8mb4_unicode_ci;
+create database prj4stdb character set utf8mb4 collate utf8mb4_unicode_ci;
 
 # django사용자에게 qnadb 권한 부여
 grant all privileges on qnadb.* to 'django'@'%';

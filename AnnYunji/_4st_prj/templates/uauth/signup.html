@@ -16,7 +16,7 @@
 <div class="row">
     <div class="col-md-6">
         <form method="post" action="">
-            <h4>👤 회원가입 </h4>
+            {% comment %} <h4>👤 회원가입 </h4> {% endcomment %}
             <div class="mb-3">
                 <label for="username">사용자 이름</label>
                 <input type="text" class="form-control" name="username" id="username" value="">
@@ -37,16 +37,12 @@
                 <label for="birthday">생일</label>
                 <input type="date" class="form-control" name="birthday" id="birthday" value="">
             </div>
-            <div class="mb-3">
-                <label for="profile" class="form-label">프로필</label>
-                <input class="form-control" type="file" id="profile" name="profile">
-            </div>
     </div>
     <div class="col-md-6">
         <!-- 사용자 정보 입력 -->
          {% include "../layout/user_info_form.html" %}
     </div>    
-
+    
             <button type="submit" class="btn btn-primary">회원가입하기</button>
         
         </form>
