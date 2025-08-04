@@ -28,4 +28,4 @@ urlpatterns = [
 ]
 
 # 업로드파일 경로설정
-# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

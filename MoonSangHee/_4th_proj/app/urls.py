@@ -11,3 +11,4 @@ urlpatterns = [
     # # path('', RedirectView.as_view(url='/app/')), # /루트 주소/로 접속하면 자동으로 /app/으로
     # path('uauth/', include('uauth.urls')), 
 ]
+
