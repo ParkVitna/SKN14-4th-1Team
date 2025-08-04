@@ -1,0 +1,45 @@
+img {
+    border: 1px solid gray;
+    padding: 3px;
+}
+
+/* .header-box {
+    background: linear-gradient(135deg, #a8edea 0%, #d3f8e2 100%);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: #e6fffa;
+    color: #234e52;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    margin: 0.2rem;
+}
+
+.chat-box {
+    background-color: #f8f9fa;
+    border-left: 5px solid #667eea;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+}
+
+.warning-box {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.main-box {
+    background: linear-gradient(135deg, #deffc8ff 0%, #e0f7fa 100%);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    height: 50vh;
+} */

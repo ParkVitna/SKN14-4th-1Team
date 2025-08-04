@@ -1,0 +1,66 @@
+{% extends "../layout/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <!-- 사용자 정보 입력 -->
+    <div class="col-md-3">
+        {% include "layout/user_info_form.html" %}
+    </div>
+
+    <!-- 챗봇 및 추천 콘텐츠 -->
+    <div class="col-md-9">
+        <h4>💬 챗봇 & 🎯 맞춤 추천</h4>
+
+        <!-- Q&A 빠른 질문 -->
+        <div class="d-flex gap-3 mb-3">
+            <button class="btn btn-outline-primary">피부에 좋은 영양제는?</button>
+            <button class="btn btn-outline-primary">피로 회복에 도움되는 것은?</button>
+            <button class="btn btn-outline-primary">비타민D와 칼슘 같이 먹어도 되나요?</button>
+        </div>
+
+        <!-- 질문 입력 -->
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="궁금한 것을 물어보세요..." aria-label="질문 입력">
+            <button class="btn btn-success" type="button">전송</button>
+        </div>
+
+        <!-- 챗봇 응답 예시 -->
+        <div class="chat-box">
+            <strong>질문:</strong> 피부에 좋은 영양제는?<br>
+            <strong>🤖 AI 답변:</strong> 비타민C, 콜라겐, 히알루론산 제품이 추천됩니다.
+        </div>
+
+        <hr class="my-4">
+
+        <!-- 추천 영역 -->
+        <h5>🎯 맞춤형 추천</h5>
+        <!-- 제품 카드 예시 -->
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="https://via.placeholder.com/300" class="img-fluid rounded-start" alt="제품 이미지">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">🌟 비타민A 컴플렉스</h5>
+                        <p class="card-text"><strong>브랜드:</strong> XYZ | <strong>가격:</strong> 25,000원</p>
+                        <p class="card-text"><strong>평점:</strong> ⭐ 4.5/5.0 (200개 리뷰)</p>
+                        <p><strong>성분:</strong>
+                            <span class="tag">비타민A</span>
+                            <span class="tag">베타카로틴</span>
+                        </p>
+                        <div class="warning-box">
+                            <strong>주의사항:</strong>
+                            <ul>
+                                <li>과다 복용 금지</li>
+                                <li>공복 시 복용</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

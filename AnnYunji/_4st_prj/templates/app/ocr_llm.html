@@ -1,0 +1,18 @@
+{% extends "../layout/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <!-- 사용자 정보 입력 -->
+    <div class="col-md-3">
+        {% include "layout/user_info_form.html" %}
+    </div>
+
+    <!-- OCR_LLM -->
+    <div class="col-md-9">
+        <h4>📷 사진 속 영양제 정보</h4>
+        <p class="text-danger">💊 영양제 사진을 업로드하세요</p>
+        <input class="form-control" type="file" id="profile" name="profile">
+    </div>
+</div>
+{% endblock %}
