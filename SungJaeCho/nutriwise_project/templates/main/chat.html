@@ -1,0 +1,9 @@
+{% extends "layout/base.html" %}
+{% block title %}NutriWise - 채팅/추천{% endblock %}
+{% block content %}
+<h2 class="mb-4">💬 AI 챗봇 & 맞춤 추천 <span class="badge bg-warning text-dark">회원만</span></h2>
+<div class="alert alert-info mb-4" role="alert">
+  <strong>홍길동</strong>님, 맞춤형 상담 및 추천이 가능합니다. <a href="{% url 'main:profile' %}" class="alert-link">[프로필 보기]</a>
+</div>
+<!-- 이하 UI만 (입력창 등은 disabled) -->
+{% endblock %}
