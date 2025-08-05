@@ -15,3 +15,7 @@ create database nutriwisedb character set utf8mb4 collate utf8mb4_unicode_ci;
 grant all privileges on nutriwisedb.* to 'django'@'%';
 
 flush privileges;
+
+-- app > models.py 작업 후
+-- python manage.py makemigrations uauth
+-- python manage.py migrate uauth
