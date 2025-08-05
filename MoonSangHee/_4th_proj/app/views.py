@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .config import load_config
 from .rag_chatbot import RAG_Chatbot
 from django.core.files.storage import FileSystemStorage
+from .utils import parse_product_detail
 
 cfg = load_config()
 rag = RAG_Chatbot(cfg)
@@ -12,59 +13,53 @@ def home(request):
 
     return render(request, 'app/home.html')
 
-# def search(request):
-#     # 검색 페이지
-#     q = request.GET.get("q", "")
-#     ctx = {"q": q}
-#     return render(request, "app/search.html", ctx)
-
 def search(request):
     response_text = ""
-    q = request.GET.get("q", "")
+    q = ""
     img_file = None
+    image_url = None
 
-    if request.method == "POST" and request.FILES.get('image'):
+    if request.method == "POST":
+        q = request.POST.get("q", "").strip()
         img_file = request.FILES.get("image")
-        fs = FileSystemStorage()
-        filename = fs.save(img_file.name, img_file)
-        image_url = fs.url(filename)
+        
+        if img_file:
+            fs = FileSystemStorage()
+            filename = fs.save(img_file.name, img_file)
+            image_url = fs.url(filename)
 
-    if q or img_file:
-        try:
-            print('q', q)
-            response_text = rag.run(
-                question=q,
-                use_ocr=bool(img_file),
-                img_file=img_file
-            )
-        except Exception as e:
-            response_text = f"에러 발생: {str(e)}"
+        if q or img_file:
+            try:
+                # ✅ search에서는 무조건 제품 기반 검색으로 고정
+                response_text = rag.run(
+                    question=q,
+                    use_ocr=bool(img_file),
+                    img_file=img_file,
+                    search_mode=True  # 고정!
+                )
+            except Exception as e:
+                response_text = f"에러 발생: {str(e)}"
+
+    print("🔍 response_text:", response_text)
+
     product_list = []
     if response_text:
-        # 제품명 기준으로 분리: <<제품명>>, <<제품명2>>, ...
-        pattern = r"<<(.+?)>>\s*- 브랜드:.*?(?=(<<|$))"  # lookahead로 다음 제품 또는 끝까지
+        pattern = r"<<.+?>>.*?(?=(<<|$))"
         matches = re.finditer(pattern, response_text, re.DOTALL)
 
-        
         for match in matches:
-            title = match.group(1).strip()
-            detail = match.group(0).strip()
-            product_list.append({
-                "name": title,
-                "detail": detail
-            })
-        ctx = {"response_list": product_list,
-           "image_url": image_url}
+            raw_block = match.group(0).strip()
+            parsed = parse_product_detail(raw_block)
+            product_list.append(parsed)
 
-        return render(request, "app/search.html", ctx)
+    ctx = {
+        "response_list": product_list,
+        "image_url": image_url,
+        "q": q
+    }
 
-    return render(request, "app/search.html", {"response_list": product_list})
+    return render(request, "app/search.html", ctx)
 
-    # ctx = {
-    #     "q": q,
-    #     "response": response_text
-    # }
-    # return render(request, "app/search.html", ctx)
 
 
 def recommend(request):

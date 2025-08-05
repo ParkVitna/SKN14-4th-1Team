@@ -2,68 +2,84 @@
 {% load static %}
 
 {% block title %}영양제 검색하기 · NutriWise{% endblock %}
+
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+</style>
 {% endblock %}
 
 {% block content %}
-<section class="nw-search container mt-5">
-  <h1 class="nw-search__title text-center mb-4">원하는 영양제를 검색해보세요</h1>
+<section class="container mt-5">
+  <h2 class="text-center fw-bold mb-4">원하는 영양제를 검색해보세요</h2>
 
-  <!-- 🔍 기존 검색바 유지 -->
-  <form action="#" method="post" enctype="multipart/form-data" class="nw-search__form mb-5">
+  <!-- 검색 폼 -->
+  <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center align-items-center gap-2 mb-4">
     {% csrf_token %}
-    <input type="text" name="q" class="nw-search__input" placeholder="제품명 / 성분 / 브랜드로 검색" value="{{ request.GET.q }}">
-    
-    <!-- 이미지/카메라 업로드 -->
-    <label class="nw-search__btn nw-search__btn--icon" title="이미지로 검색">
-      <input type="file" name="image" accept="image/*" class="nw-search__file" onchange="this.form.submit()">
-      📷
+    <input type="text" name="q" class="form-control w-50" placeholder="제품명 / 성분 / 브랜드로 검색" value="{{ request.POST.q }}">
+
+    <!-- 카메라 버튼 -->
+    <label class="camera-btn" title="이미지 업로드">
+      <input type="file" name="image" id="image" class="d-none" accept="image/*" onchange="this.form.submit()">
+      <i class="bi bi-camera"></i>
     </label>
 
-    <button type="submit" class="nw-search__btn nw-search__btn--primary">
+    <button type="submit" class="btn btn-success">
       🔍 검색
     </button>
   </form>
 
-    <!-- 결과 출력 -->
-    {% if response_list or image_url %}
-    <div class="row mt-5">
-      <!-- 왼쪽: 업로드 이미지 -->
-      <div class="col-md-4">
-        {% if image_url %}
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header text-center fw-semibold">📸 업로드한 이미지</div>
-          <img src="{{ image_url }}" alt="업로드 이미지" class="card-img-top" style="max-height: 300px; object-fit: contain;">
-        </div>
-        {% endif %}
-      </div>
+  {% if response_list %}
+  <h5 class="mb-3 text-success fw-bold">🧾 검색 결과</h5>
 
-      <!-- 오른쪽: 추천 결과 -->
-      <div class="col-md-8">
-        {% if response_list %}
-        <h5 class="mb-3 text-success fw-bold">🧾 검색 결과</h5>
-        {% for item in response_list %}
-          <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-              <h6 class="card-title text-primary fw-semibold">📦 {{ item.name }}</h6>
-              <pre class="card-text" style="white-space: pre-wrap;">{{ item.detail }}</pre>
-            </div>
-          </div>
-        {% endfor %}
-        {% endif %}
+  <div class="row">
+    <!-- 이미지가 있을 때만 좌측에 이미지 카드 -->
+    {% if image_url %}
+    <div class="col-md-4 image-container">
+      <div class="card mb-4">
+        <div class="card-header fw-bold">📸 업로드한 이미지</div>
+        <img src="{{ image_url }}" class="uploaded-image" alt="Uploaded Image">
       </div>
     </div>
     {% endif %}
 
-  <!-- 인기 검색어 -->
-  <div class="nw-search__meta mt-5">
-    <span class="tag">비타민D</span>
-    <span class="tag">오메가3</span>
-    <span class="tag">마그네슘</span>
+    <!-- 검색 결과 아코디언 -->
+    <div class="{% if image_url %}col-md-8{% else %}col-md-12{% endif %}">
+      <div class="accordion" id="productAccordion">
+        {% for item in response_list %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse-{{ forloop.counter }}"
+                    aria-expanded="false"
+                    aria-controls="collapse-{{ forloop.counter }}">
+              {{ item.name }}
+            </button>
+          </h2>
+          <div id="collapse-{{ forloop.counter }}"
+               class="accordion-collapse collapse"
+               aria-labelledby="heading-{{ forloop.counter }}"
+               data-bs-parent="#productAccordion">
+            <div class="accordion-body">
+              {% if item.brand %}<p><strong>브랜드:</strong> {{ item.brand }}</p>{% endif %}
+              {% if item.benefits %}<p><strong>기대효과:</strong> {{ item.benefits }}</p>{% endif %}
+              {% if item.how_to_take %}<p><strong>섭취 방법:</strong> {{ item.how_to_take }}</p>{% endif %}
+              {% if item.ingredients %}<p><strong>성분:</strong> {{ item.ingredients }}</p>{% endif %}
+              {% if item.cautions %}<p><strong>주의사항:</strong> {{ item.cautions }}</p>{% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
+  {% endif %}
 </section>
 {% endblock %}
 
-
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+{% endblock %}
