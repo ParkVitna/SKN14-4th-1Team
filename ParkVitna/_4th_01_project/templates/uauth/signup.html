@@ -101,34 +101,61 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", togglePregnantCheckbox);
-
     document.addEventListener("DOMContentLoaded", function () {
+        togglePregnantCheckbox();
+
         const form = document.querySelector("form");
         const password1 = document.getElementById("password1");
         const password2 = document.getElementById("password2");
         const username = document.getElementById("username");
         const useremail = document.getElementById("email");
 
-        // 각 에러 메시지 div
         const usernameError = document.createElement("div");
         const emailError = document.createElement("div");
         const pw1Error = document.createElement("div");
         const pw2Error = document.createElement("div");
 
-        // 스타일 지정
         [usernameError, emailError, pw1Error, pw2Error].forEach(el => {
             el.classList.add("text-danger", "mt-1");
             el.style.fontSize = "0.8em";
         });
 
-        // 에러 박스 추가
         username.parentNode.appendChild(usernameError);
         useremail.parentNode.appendChild(emailError);
         password1.parentNode.appendChild(pw1Error);
         password2.parentNode.appendChild(pw2Error);
 
+        let isEmailAvailable = true;  // 이메일 중복 결과 상태 저장
+
+        // 이메일 ajax 중복 검사
+        useremail.addEventListener("input", function () {
+            const uemail = useremail.value.trim();
+
+            emailError.textContent = "";
+            useremail.classList.remove("is-invalid");
+            isEmailAvailable = true;
+
+            if (uemail.length > 3 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(uemail)) {
+                fetch(`{% url 'uauth:check_usermail' %}?email=${encodeURIComponent(uemail)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.available) {
+                            emailError.textContent = "이미 사용 중인 이메일입니다.";
+                            useremail.classList.add("is-invalid");
+                            isEmailAvailable = false;
+                        }
+                    })
+                    .catch(() => {
+                        emailError.textContent = "이메일 확인 중 오류가 발생했습니다.";
+                        useremail.classList.add("is-invalid");
+                        isEmailAvailable = false;
+                    });
+            }
+        });
+
         form.addEventListener("submit", function (e) {
+            e.preventDefault(); // 기본 제출 막기
+
             usernameError.textContent = "";
             emailError.textContent = "";
             pw1Error.textContent = "";
@@ -146,14 +173,12 @@
 
             let hasError = false;
 
-            // 사용자명 검사
             if (uname.length < 1) {
                 usernameError.textContent = "사용자 이름은 최소 1자 이상이어야 합니다.";
                 username.classList.add("is-invalid");
                 hasError = true;
             }
 
-            // 이메일 검사
             if (uemail.length < 1) {
                 emailError.textContent = "이메일을 입력해주세요.";
                 useremail.classList.add("is-invalid");
@@ -162,9 +187,12 @@
                 emailError.textContent = "유효한 이메일 형식이 아닙니다.";
                 useremail.classList.add("is-invalid");
                 hasError = true;
+            } else if (!isEmailAvailable) {
+                emailError.textContent = "이미 사용 중인 이메일입니다.";
+                useremail.classList.add("is-invalid");
+                hasError = true;
             }
 
-            // 비밀번호 검사
             if (pwd.length < 8) {
                 pw1Error.textContent = "비밀번호는 최소 8자 이상이어야 합니다.";
                 password1.classList.add("is-invalid");
@@ -179,28 +207,14 @@
                 hasError = true;
             }
 
-            // 비밀번호 확인
             if (pwd !== pwd2) {
                 pw2Error.textContent = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
                 password2.classList.add("is-invalid");
                 hasError = true;
             }
 
-            // 이메일 중복 비동기 검사 (폼 제출 막기 위해 async/await를 써야 정확함)
             if (!hasError) {
-                e.preventDefault(); // 먼저 제출 막고
-                fetch(`/check_usermail?email=${encodeURIComponent(uemail)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.available) {
-                            emailError.textContent = "이미 사용 중인 이메일입니다.";
-                            useremail.classList.add("is-invalid");
-                        } else {
-                            form.submit(); // 중복 아니면 제출 강행
-                        }
-                    });
-            } else {
-                e.preventDefault(); // 에러 있으면 제출 막기
+                form.submit(); // 검증 완료 시 제출
             }
         });
     });

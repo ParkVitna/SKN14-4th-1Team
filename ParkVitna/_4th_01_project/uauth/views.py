@@ -51,12 +51,13 @@ def signup(request):
 
 
 def check_usermail(request):
-  """
-  회원가입시 email 중복여부를 검사하는 ajax처리 뷰함수
-  """
-  useremail = request.GET.get('email')
-  # email 사용가능 여부 
-  available = User.objects.filter(useremail=useremail).exists() == False
-  print(f"{useremail=}, {available=}")
+    """
+    회원가입시 email 중복여부를 검사하는 ajax처리 뷰함수
+    """
+    print("check_usermail called")
+    useremail = request.GET.get('email')
+    # email 사용가능 여부 
+    available = User.objects.filter(email=useremail).exists() == False
+    print(f"{useremail=}, {available=}")
 
-  return JsonResponse({'available': available})
+    return JsonResponse({'available': available})
