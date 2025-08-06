@@ -94,19 +94,15 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     # {
-    #     # 사용자 정보(예: username, email, 이름 등)와 너무 비슷한 비밀번호를 막음
     #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     # },
     # {
-    #     # 최소 길이를 만족해야 함 (기본값: 8자)
     #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     # },
     # {
-    #     # 너무 흔한 비밀번호를 거부
     #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     # },
     # {
-    #     # 숫자로만 이루어진 비밀번호를 거부
     #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     # },
 ]
@@ -137,3 +133,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 파일업로드 관련 설정
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR/'media'
