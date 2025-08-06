@@ -18,21 +18,24 @@
             {% csrf_token %}
             {% comment %} <h4>👤 회원가입 </h4> {% endcomment %}
             <div class="mb-3">
-                <label for="username">사용자 이름</label>
+                <label for="username">사용자 이름*</label>
                 <input type="text" class="form-control" name="username" id="username" value="">
             </div>
             <div class="mb-3">
-                <label for="password1">비밀번호</label>
+                <label for="password1">비밀번호*</label>
                 <input type="password" class="form-control" name="password1" id="password1" value="">
+                <small class="text-muted" style="font-size: 0.7em; color: #bbb; padding-left: 5px;">
+                    ※ 비밀번호는 최소 8자 이상이어야 하며, 아이디와 비슷하거나 너무 흔한 비밀번호, 숫자만으로 구성된 비밀번호는 사용할 수 없습니다.
+                </small>
             </div>
             
             <div class="mb-3">
-                <label for="password2">비밀번호 확인</label>
+                <label for="password2">비밀번호 확인*</label>
                 <input type="password" class="form-control" name="password2" id="password2" value="">
             </div>
 
             <div class="mb-3">
-                <label for="email">이메일</label>
+                <label for="email">이메일*</label>
                 <input type="text" class="form-control" name="email" id="email" value="">
             </div>
 
@@ -45,7 +48,7 @@
         <div class="col-md-6">
             <!-- 사용자 정보 입력 -->
             <div class="mb-3">
-                <label class="form-label">성별</label>
+                <label class="form-label">성별*</label>
                 <select class="form-select" id="gender" name="gender" onchange="togglePregnantCheckbox()">
                     <option value="M">남성</option>
                     <option value="F">여성</option>
@@ -89,7 +92,7 @@
     function togglePregnantCheckbox() {
         const genderSelect = document.getElementById("gender");
         const pregnantDiv = document.getElementById("pregnant-check");
-        
+
         if (genderSelect.value === "F") {
             pregnantDiv.style.display = "block";
         } else {
@@ -98,7 +101,108 @@
         }
     }
 
-    // 초기 상태 반영
     document.addEventListener("DOMContentLoaded", togglePregnantCheckbox);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const password1 = document.getElementById("password1");
+        const password2 = document.getElementById("password2");
+        const username = document.getElementById("username");
+        const useremail = document.getElementById("email");
+
+        // 각 에러 메시지 div
+        const usernameError = document.createElement("div");
+        const emailError = document.createElement("div");
+        const pw1Error = document.createElement("div");
+        const pw2Error = document.createElement("div");
+
+        // 스타일 지정
+        [usernameError, emailError, pw1Error, pw2Error].forEach(el => {
+            el.classList.add("text-danger", "mt-1");
+            el.style.fontSize = "0.8em";
+        });
+
+        // 에러 박스 추가
+        username.parentNode.appendChild(usernameError);
+        useremail.parentNode.appendChild(emailError);
+        password1.parentNode.appendChild(pw1Error);
+        password2.parentNode.appendChild(pw2Error);
+
+        form.addEventListener("submit", function (e) {
+            usernameError.textContent = "";
+            emailError.textContent = "";
+            pw1Error.textContent = "";
+            pw2Error.textContent = "";
+
+            username.classList.remove("is-invalid");
+            useremail.classList.remove("is-invalid");
+            password1.classList.remove("is-invalid");
+            password2.classList.remove("is-invalid");
+
+            const uname = username.value.trim();
+            const uemail = useremail.value.trim();
+            const pwd = password1.value.trim();
+            const pwd2 = password2.value.trim();
+
+            let hasError = false;
+
+            // 사용자명 검사
+            if (uname.length < 1) {
+                usernameError.textContent = "사용자 이름은 최소 1자 이상이어야 합니다.";
+                username.classList.add("is-invalid");
+                hasError = true;
+            }
+
+            // 이메일 검사
+            if (uemail.length < 1) {
+                emailError.textContent = "이메일을 입력해주세요.";
+                useremail.classList.add("is-invalid");
+                hasError = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(uemail)) {
+                emailError.textContent = "유효한 이메일 형식이 아닙니다.";
+                useremail.classList.add("is-invalid");
+                hasError = true;
+            }
+
+            // 비밀번호 검사
+            if (pwd.length < 8) {
+                pw1Error.textContent = "비밀번호는 최소 8자 이상이어야 합니다.";
+                password1.classList.add("is-invalid");
+                hasError = true;
+            } else if (/^\d+$/.test(pwd)) {
+                pw1Error.textContent = "비밀번호는 숫자로만 이루어질 수 없습니다.";
+                password1.classList.add("is-invalid");
+                hasError = true;
+            } else if (uname && pwd.includes(uname)) {
+                pw1Error.textContent = "비밀번호에 사용자 이름을 포함할 수 없습니다.";
+                password1.classList.add("is-invalid");
+                hasError = true;
+            }
+
+            // 비밀번호 확인
+            if (pwd !== pwd2) {
+                pw2Error.textContent = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
+                password2.classList.add("is-invalid");
+                hasError = true;
+            }
+
+            // 이메일 중복 비동기 검사 (폼 제출 막기 위해 async/await를 써야 정확함)
+            if (!hasError) {
+                e.preventDefault(); // 먼저 제출 막고
+                fetch(`/check_usermail?email=${encodeURIComponent(uemail)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.available) {
+                            emailError.textContent = "이미 사용 중인 이메일입니다.";
+                            useremail.classList.add("is-invalid");
+                        } else {
+                            form.submit(); // 중복 아니면 제출 강행
+                        }
+                    });
+            } else {
+                e.preventDefault(); // 에러 있으면 제출 막기
+            }
+        });
+    });
 </script>
 {% endblock script %}
