@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.db import transaction
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 from .models import UserForm, UserDetail
 
@@ -46,3 +48,16 @@ def signup(request):
         form = UserForm()
 
     return render(request, 'uauth/signup.html', {'form': form})
+
+
+def check_usermail(request):
+    """
+    회원가입시 email 중복여부를 검사하는 ajax처리 뷰함수
+    """
+    print("check_usermail called")
+    useremail = request.GET.get('email')
+    # email 사용가능 여부 
+    available = User.objects.filter(email=useremail).exists() == False
+    print(f"{useremail=}, {available=}")
+
+    return JsonResponse({'available': available})
