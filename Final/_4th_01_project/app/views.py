@@ -5,6 +5,9 @@ from .rag_chatbot import RAG_Chatbot
 from django.core.files.storage import FileSystemStorage
 from .utils import parse_product_detail
 
+cfg = load_config()
+rag = RAG_Chatbot(cfg)
+
 def home(request):
     return render(request, 'app/home.html')
 
