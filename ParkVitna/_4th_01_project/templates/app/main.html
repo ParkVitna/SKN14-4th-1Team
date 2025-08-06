@@ -37,6 +37,8 @@
                         </p>
                         {% if user.is_authenticated %}
                         <a href="{% url 'app:chat_recommand' %}" class="btn btn-gradient">
+                            <i class="fas fa-arrow-right me-2"></i>질문 및 추천받기
+                        </a>
                         {% else %}
                         <a href="{% url 'uauth:login' %}" class="btn btn-gradient">
                             <i class="fas fa-arrow-right me-2"></i>질문 및 추천받기
