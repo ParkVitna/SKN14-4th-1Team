@@ -76,15 +76,8 @@ WSGI_APPLICATION = '_4th_01_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nutriwisedb',
-        'USER' : 'django',
-        'PASSWORD' : 'django',
-        'HOST' : '127.0.0.1',
-        'PORT' : '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -133,7 +126,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# 파일업로드 관련 설정
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR/'media'
