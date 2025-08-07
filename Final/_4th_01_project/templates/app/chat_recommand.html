@@ -59,11 +59,13 @@
                     <div class="bot-message">
                         <strong><i class="fas fa-robot me-2"></i>NutriWise AI</strong><br>
                         안녕하세요! 건강기능식품에 대해 궁금한 것이 있으시면 언제든 물어보세요. 식품의약품안전처 데이터를 기반으로 정확한 정보를 제공해드리겠습니다.
+                        <br> 상담을 원하시면 상담 시작을 입력하세요
+                        <br> 상담을 종료하고 싶으시면 상담 종료를 입력하세요
                     </div>
                 </div>
 
                 <!-- Typing Indicator -->
-                <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
                     <strong><i class="fas fa-robot me-2"></i>NutriWise AI가 답변 중입니다...</strong>
                     <div class="typing-dots mt-2">
                         <span></span>
@@ -85,6 +87,7 @@
         </div>
     </div>
 {% endblock content %}
+
 
 {% block script %}
     <script>
@@ -158,16 +161,27 @@
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCSRFToken()
                 },
-                body: JSON.stringify({ question: message, use_ocr: false })
+                body: JSON.stringify({ question: message, use_ocr: false }),
+                credentials: 'same-origin'   // 이 줄 추가!
             })
-            .then(response => response.json())
+            .then(response => {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    return response.json();
+                } else {
+                    // 서버에서 HTML 등 이상 응답 시 예외 발생
+                    return response.text().then(text => {
+                        throw new Error("서버 오류(HTML): " + text.substring(0, 100));
+                    });
+                }
+            })
             .then(data => {
                 hideTypingIndicator();
                 addMessage(data.response, 'bot');
             })
             .catch(error => {
                 hideTypingIndicator();
-                addMessage("죄송합니다. 서버와 연결할 수 없습니다.", 'bot');
+                addMessage("죄송합니다. 서버와 연결할 수 없거나, 로그인이 만료되었습니다.", 'bot');
                 console.error('Error:', error);
             });
         }
