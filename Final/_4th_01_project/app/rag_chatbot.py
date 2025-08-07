@@ -4,27 +4,31 @@ from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from pinecone import Pinecone
 from langchain_core.prompts import PromptTemplate
 from .ocr_llm import OCR_LLM
+from langchain.vectorstores import FAISS
+from dotenv import load_dotenv
+from .config import load_config
+
+load_dotenv()
+CFG = load_config()
 
 class RAG_Chatbot():
 
-    def __init__(self, cfg):
+    def __init__(self):
 
         super().__init__()
 
         self.openai_api_key = os.getenv('OPENAI_API_KEY')
         self.pinecone_api_key = os.getenv('PINECONE_API_KEY')
 
-        self.cfg = cfg
+        self.cfg = CFG
         self.ocr = OCR_LLM(self.cfg)
 
-        self.index_name = self.cfg['VECTOR_STORE_INDEX_NAME']
         self.openai_embedding_model = self.cfg["OPENAI_EMBEDDING_MODEL"]
-        self.pinecone_env = self.cfg['PINECONE_ENV']
         self.openai_model_name = self.cfg['OPENAI_MODEL_NAME']
+        self.faiss_dir = self.cfg['FAISS_FILE_PATH']
 
-        self.embeddings = OpenAIEmbeddings(openai_api_key=self.openai_api_key, model=self.openai_embedding_model )
-        self.pc = Pinecone(api_key=self.pinecone_api_key, environment=self.pinecone_env)
-        self.vector_store = PineconeVectorStore(index=self.pc.Index(self.index_name), embedding=self.embeddings)
+        self.embeddings = get_embedding_model()
+        self.vector_store = get_faiss_index()
         self.retriever = self.vector_store.as_retriever(search_type='similarity', search_kwargs={'k': 3})
 
 
@@ -184,3 +188,23 @@ class RAG_Chatbot():
             """)
         
         return prompt
+
+# 전역변수 선언 -> 초기화
+embedding_model = None
+faiss_index = None
+
+def get_embedding_model():
+    global embedding_model
+    if embedding_model is None:
+        embedding_model = OpenAIEmbeddings(
+            openai_api_key=os.getenv('OPENAI_API_KEY'),
+            model=CFG['OPENAI_EMBEDDING_MODEL']
+        )
+    return embedding_model
+
+def get_faiss_index():
+    global faiss_index
+    if faiss_index is None:
+        embeddings = get_embedding_model()
+        faiss_index = FAISS.load_local(CFG['FAISS_FILE_PATH'], index_name='index', embeddings=embeddings, allow_dangerous_deserialization=True)
+    return faiss_index
