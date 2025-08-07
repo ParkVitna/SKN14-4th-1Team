@@ -1,4 +1,4 @@
-import re
+import re, os
 from django.shortcuts import render
 from .config import load_config
 from .rag_chatbot import RAG_Chatbot
@@ -29,17 +29,25 @@ def search(request):
         
         if img_file:
             fs = FileSystemStorage()
+
+            upload_dir = fs.location  # 실제 경로 (예: MEDIA_ROOT)
+            
+            for filename in os.listdir(upload_dir):
+                file_path = os.path.join(upload_dir, filename)
+
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+
             filename = fs.save(img_file.name, img_file)
             image_url = fs.url(filename)
 
         if q or img_file:
             try:
-                # ✅ search에서는 무조건 제품 기반 검색으로 고정
                 response_text = rag.run(
                     question=q,
                     use_ocr=bool(img_file),
                     img_file=img_file,
-                    search_mode=True  # 고정!
+                    search_mode=True 
                 )
             except Exception as e:
                 response_text = f"에러 발생: {str(e)}"
