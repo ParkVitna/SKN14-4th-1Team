@@ -9,4 +9,5 @@ urlpatterns = [
     path('main', views.main, name='main'),
     path('chat', views.chat_recommand, name='chat_recommand'),
     path('serach', views.search, name='search'),
+    # path('chatbot/', views.chatbot_view, name='chatbot_view'),
 ]

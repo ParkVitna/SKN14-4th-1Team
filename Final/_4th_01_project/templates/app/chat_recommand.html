@@ -110,6 +110,23 @@
         const typingIndicator = document.getElementById('typingIndicator');
         const sampleQuestions = document.querySelectorAll('.sample-question');
 
+////////// CSRF 토큰 가져오기 /////수정
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, 10) === ('csrftoken=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(10));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+///////////////////////////////////
+
         // Event listeners
         sendButton.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', function(e) {
@@ -131,21 +148,28 @@
             const message = chatInput.value.trim();
             if (!message) return;
 
-            // Add user message to chat
             addMessage(message, 'user');
             chatInput.value = '';
-
-            // Show typing indicator
             showTypingIndicator();
 
-            // Simulate AI response delay
-            setTimeout(() => {
+            fetch('/app/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({ question: message, use_ocr: false })
+            })
+            .then(response => response.json())
+            .then(data => {
                 hideTypingIndicator();
-
-                // Get response (simplified for demo)
-                const response = getAIResponse(message);
-                addMessage(response, 'bot');
-            }, 2000);
+                addMessage(data.response, 'bot');
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                addMessage("죄송합니다. 서버와 연결할 수 없습니다.", 'bot');
+                console.error('Error:', error);
+            });
         }
 
         function addMessage(message, sender) {

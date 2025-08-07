@@ -1,4 +1,5 @@
-import re
+import re, json
+from django.http import JsonResponse
 from django.shortcuts import render
 from .rag_chatbot import RAG_Chatbot
 from django.core.files.storage import FileSystemStorage
@@ -13,7 +14,18 @@ def main(request):
     return render(request, 'app/main.html')
 
 def chat_recommand(request):
-    return render(request, 'app/chat_recommand.html')
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        question = data.get('question', '')
+        use_ocr = data.get('use_ocr', False)
+
+        response = rag.run(question=question, use_ocr=use_ocr)
+
+        # JSON 응답 반환 (AJAX용)
+        return JsonResponse({"response": response})
+    else:
+        
+        return render(request, 'app/chat_recommand.html')
 
 def search(request):
     response_text = ""
