@@ -18,8 +18,9 @@ def chat_recommand(request):
         data = json.loads(request.body)
         question = data.get('question', '')
         use_ocr = data.get('use_ocr', False)
+        user = request.user
 
-        response = rag.run(question=question, use_ocr=use_ocr)
+        response = rag.run(question=question, use_ocr=use_ocr, user=user)
 
         # JSON 응답 반환 (AJAX용)
         return JsonResponse({"response": response})

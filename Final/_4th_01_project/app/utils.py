@@ -1,6 +1,37 @@
 import re, os
 from django.conf import settings
 
+def get_user_profile_summary(user):
+
+    from uauth.models import UserDetail
+
+    try:
+        detail = UserDetail.objects.get(user=user)
+    except UserDetail.DoesNotExist:
+        return "사용자 정보가 없습니다."
+
+    birthday = detail.birthday
+    gender = detail.gender
+    is_pregnant = detail.is_pregnant
+    health_concerns = detail.health_concerns
+
+    summary = "[사용자 정보 요약]"
+    
+    if birthday:
+        summary += f"출생연도: {birthday.year}년, "
+    
+    if gender == 'M':
+        summary += "성별: 남성, "
+    elif gender == 'F':
+        summary += "성별: 여성, "
+        if is_pregnant:
+            summary += "현재 임신 중, "
+    
+    if health_concerns:
+        summary += f"건강 관심사: {health_concerns}."
+    
+    return summary.strip()
+
 def parse_product_detail(raw_text):
     result = {}
 

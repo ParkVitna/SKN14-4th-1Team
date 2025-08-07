@@ -7,6 +7,7 @@ from .ocr_llm import OCR_LLM
 from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
 from .config import load_config
+from .utils import get_user_profile_summary
 
 load_dotenv()
 CFG = load_config()
@@ -32,11 +33,14 @@ class RAG_Chatbot():
         self.retriever = self.vector_store.as_retriever(search_type='similarity', search_kwargs={'k': 3})
 
 
-    def run(self, question="", use_ocr=False, search_mode=False, img_file=None, temperature=0.3, max_token=1024): 
-
+    def run(self, question="", use_ocr=False, search_mode=False, img_file=None, temperature=0.3, max_token=1024, user=None): 
         
         llm = ChatOpenAI(openai_api_key=self.openai_api_key, temperature=temperature, model_name=self.openai_model_name, max_tokens=max_token)
-  
+        
+        if user != None:
+
+            user_detail = get_user_profile_summary(user)
+
         if use_ocr:
 
             if img_file is None:
@@ -62,7 +66,7 @@ class RAG_Chatbot():
                 if search_mode==True:
                     prompt_template = self.prompt_ocr(question=question, context=context)
                 else:
-                    prompt_template = self.prompt(question=question, context=context)
+                    prompt_template = self.prompt(question=question, context=context, user_summary=user_detail)
 
             except Exception as e:
                 raise RuntimeError(f"텍스트 처리 중 오류가 발생했습니다: {e}")
@@ -72,12 +76,15 @@ class RAG_Chatbot():
     
         return response.content
     
-    def prompt(self, question, context):
+    def prompt(self, question, context, user_summary=""):
         
         system_prompt = PromptTemplate.from_template("""
         
          [System Instruction]
         - 당신은 여러 문서를 분석하여 사용자의 질문에 친절히 답변하는 건강기능식품 및 영양제 추천 전문가입니다.
+        - User Information을 기반으로 답변을 시작하세요.
+        - 예를 들어 User Information가 '[사용자 정보 요약]출생연도: 2025년, 성별: 여성, 건강 관심사: 소화/장 건강, 스트레스 관리.'라면
+          2005년생 여성에게 추천하는 영양제입니다. 로 답변을 시작하세요. 
         - 사용자의 질문이 특정 증상(예: 피로, 수면장애, 스트레스 등)이나 불편함에 대한 것이라면, 먼저 사용자의 상황에 공감하는 문장으로 답변을 시작하세요.
         - 공감 문장은 예를 들어 "요즘 많이 힘드셨을 것 같아요", "수면이 부족하면 정말 힘들죠"처럼 사용자의 감정에 반응하는 내용이어야 합니다.
         - 단순한 정보 전달 전에, 사용자의 입장에서 걱정과 상황을 이해하는 태도를 먼저 보여주세요.
@@ -123,6 +130,9 @@ class RAG_Chatbot():
         ※ 각 항목은 반드시 **한글**로 작성하고, 문장형으로 친절하게 설명할 것
         ※ 항목이 문서에 없다면 "정보 없음" 또는 생략하지 않고 "문서에 정보 없음"이라고 명시할 것
         ※ 모든 제품 정보는 문서에 기반하여 제공해야 하며, 절대 생성하거나 추측하지 말 것
+                                                     
+        [User Information]
+        {user_summary}
 
         [Context]
         {context}
@@ -132,7 +142,7 @@ class RAG_Chatbot():
 
     """)
 
-        return system_prompt.format(context=context, question=question)
+        return system_prompt.format(context=context, question=question, user_summary=user_summary)
     
     def prompt_ocr(self, question, context):
 
