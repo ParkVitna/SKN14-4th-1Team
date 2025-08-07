@@ -4,6 +4,15 @@ from django.db import transaction
 
 from .models import UserForm, UserDetail
 
+
+# 추가
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
+
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -14,6 +23,8 @@ def logout(request):
 
 @transaction.atomic
 def signup(request):
+    signup_failed = False  # 실패 여부 플래그
+
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
@@ -37,12 +48,71 @@ def signup(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             authenticated_user = auth.authenticate(username=username, password=password)
-            
-            if authenticated_user is not None:
-                auth.login(request, authenticated_user)
 
-            return redirect('app:main')
+            if authenticated_user is not None:
+                print("회원가입 성공 진입")
+                auth.login(request, authenticated_user)
+                return redirect('app:main')  # 여기가 로그인 후 리디렉션되는 URL 네임스페이스
+
+            # 로그인 실패 시 (거의 발생하지 않지만 대비)
+            signup_failed = True
+
+        else:
+            signup_failed = True  # 유효성 검증 실패 시 True
+
     else:
         form = UserForm()
 
-    return render(request, 'uauth/signup.html', {'form': form})
+    return render(request, 'uauth/signup.html', {'form': form, 'signup_failed': signup_failed})
+
+
+def check_username(request):
+    """
+    회원가입시 username 중복여부를 검사하는 ajax처리 뷰함수
+    """
+    username = request.GET.get('username')
+    # username 사용가능 여부 
+    available = User.objects.filter(username=username).exists() == False
+
+    return JsonResponse({'available': available})
+
+
+
+# 마이페이지
+@login_required
+def mypage(request):
+    return render(request, 'uauth/mypage.html', {'user': request.user})
+
+# 마이페이지 수정
+@login_required
+def mypage_edit(request):
+    user = request.user
+    detail, created = UserDetail.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        birthday = request.POST.get('birthday')
+        gender = request.POST.get('gender')
+        is_pregnant = request.POST.get('is_pregnant') == 'on'  # checkbox는 'on'일 때 체크됨
+        health_concerns = request.POST.getlist('health_concerns')
+
+        if email:
+            user.email = email
+            user.save()
+
+        if birthday:
+            detail.birthday = birthday
+
+        if gender:
+            detail.gender = gender
+
+        detail.is_pregnant = is_pregnant
+
+        if health_concerns:
+            detail.health_concerns = ", ".join(health_concerns)
+
+        detail.save()
+
+        return redirect('uauth:mypage')
+
+    return render(request, 'uauth/mypage_edit.html', {'user': user})
