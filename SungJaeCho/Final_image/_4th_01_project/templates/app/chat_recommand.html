@@ -127,7 +127,7 @@
         });
     });
 
-    function sendMessage() {
+    async function sendMessage() {
         const message = chatInput.value.trim();
         if (!message) return;
 
@@ -135,25 +135,62 @@
         chatInput.value = '';
         showTypingIndicator();
 
-        fetch('/app/chatbot/', {
+        const res = await fetch("{% url 'app:chatbot_api' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({ question: message, use_ocr: false })
-        })
-        .then(response => response.json())
-        .then(data => {
-            hideTypingIndicator();
-            addMessage(data.response, 'bot');
-        })
-        .catch(error => {
-            hideTypingIndicator();
-            addMessage("죄송합니다. 서버와 연결할 수 없습니다.", 'bot');
-            console.error('Error:', error);
         });
-    }
+
+        hideTypingIndicator();
+        const data = await res.json();
+
+        // ★★★ 여기에서 콘솔로 items 확인 ★★★
+        console.log("DEBUG: items from backend", data.items);
+
+        if (Array.isArray(data.items)) {
+            renderItems(data.items);
+        } else {
+            addMessage(data.response || '오류가 발생했습니다.', 'bot');
+        }
+}
+
+
+    // 제품 리스트를 카드로 렌더링
+    function renderItems(items) {
+        items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'chat-message bot-message product-card';
+
+        // 이미지 추가
+        if (item.image_url) {
+            const img = document.createElement('img');
+            img.src = item.image_url;
+            img.alt = item.name;
+            img.style.maxWidth = '120px';
+            img.style.display = 'block';
+            img.style.marginBottom = '6px';
+            card.appendChild(img);
+        }
+
+        // 텍스트 정보
+        const info = document.createElement('div');
+        info.innerHTML = `
+            <strong>${item.name || '제품명 정보 없음'}</strong><br>
+            브랜드: ${item.brand || '정보 없음'}<br>
+            설명: ${item.function || '정보 없음'}<br>
+            주의사항: ${item.precautions || '정보 없음'}<br>
+            보관방법: ${item.storage || '정보 없음'}<br>
+            유통기한: ${item.expiration || '정보 없음'}<br>
+        `;
+        card.appendChild(info);
+
+        chatHistory.appendChild(card);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        });
+    }    
 
     function addMessage(message, sender) {
         const messageDiv = document.createElement('div');
