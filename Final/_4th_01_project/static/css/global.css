@@ -14,7 +14,6 @@ body {
 
 body, nav, .navbar, .nav-link {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    color: rgba(255, 255, 255, 0.8) !important;
     font-weight: 500;
 }
 
