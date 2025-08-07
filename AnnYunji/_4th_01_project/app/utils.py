@@ -1,5 +1,4 @@
-import re, os
-from django.conf import settings
+import re
 
 def parse_product_detail(raw_text):
     result = {}
@@ -46,16 +45,3 @@ def parse_product_detail(raw_text):
     }
 
     return parsed_clean
-
-
-def delete_uploaded_images():
-    upload_dir = settings.MEDIA_ROOT
-    deleted_count = 0
-
-    for filename in os.listdir(upload_dir):
-        file_path = os.path.join(upload_dir, filename)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-            deleted_count += 1
-
-    print(f"[스케줄러] {deleted_count}개의 이미지가 삭제되었습니다.")

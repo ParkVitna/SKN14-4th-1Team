@@ -1,26 +1,30 @@
+from paddleocr import PaddleOCR
 from PIL import Image
 import numpy as np
+from .config import load_config
 from openai import OpenAI
 import os
-from paddleocr import PaddleOCR
-from .config import load_config
+import cv2
 
 class OCR_LLM():
 
     def __init__(self, cfg):
         super().__init__()
 
-        self.cfg = load_config()
+        self.cfg = cfg
         self.openai_api_key = os.getenv('OPENAI_API_KEY')
         self.openai_model_name = self.cfg['OPENAI_MODEL_NAME']
+        self.ocr = PaddleOCR(lang='korean',
+                        use_doc_orientation_classify=False,
+                        use_doc_unwarping=True,
+                        use_textline_orientation=False)
 
     
     def image_ocr(self, img_file):
 
         image = Image.open(img_file).convert("RGB")
         image = np.array(image)
-        ocr = get_ocr_model()
-        result_list = ocr.predict(image)
+        result_list = self.ocr.predict(image)
         
         text = result_list[0]['rec_texts']
         poly = result_list[0]['rec_polys']
@@ -90,18 +94,3 @@ class OCR_LLM():
 
         word_list = self.image_ocr(img_file)
         return self.keyword_llm(word_list)
-
-
-# 전역변수 선언 -> 초기화  
-
-ocr_model = None
-def get_ocr_model():
-    global ocr_model
-    if ocr_model is None:
-        ocr_model = PaddleOCR(
-            lang='korean',
-            use_doc_orientation_classify=False,
-            use_doc_unwarping=True,
-            use_textline_orientation=False
-        )
-    return ocr_model

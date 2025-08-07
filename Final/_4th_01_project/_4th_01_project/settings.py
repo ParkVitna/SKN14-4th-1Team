@@ -137,3 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 파일업로드 관련 설정
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'
+
+# 로그인 성공 후 리다이렉트
+LOGIN_REDIRECT_URL = '/app/'
