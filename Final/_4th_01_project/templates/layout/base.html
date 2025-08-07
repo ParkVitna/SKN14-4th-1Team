@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
 
     <!-- 페이지별 스타일 -->
+    {% block extra_head %}{% endblock extra_head %}
     {% block style %}{% endblock style %}
 </head>
 <body>
