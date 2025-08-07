@@ -1,3 +1,4 @@
+-- Active: 1753716315111@@127.0.0.1@3306@nutriwisedb
 -- pip install mysqlclient
 
 -- # root 계정으로 접속
