@@ -5,7 +5,8 @@ app_name = 'app'
 
 urlpatterns = [
     # path(url, view_function, name)
-    path('', views.index, name='index'),
+    path('', views.home, name='home'),
+    path('main', views.main, name='main'),
     path('chat', views.chat_recommand, name='chat_recommand'),
-    path('photo', views.photo_search, name='photo_search'),
+    path('serach', views.search, name='search'),
 ]

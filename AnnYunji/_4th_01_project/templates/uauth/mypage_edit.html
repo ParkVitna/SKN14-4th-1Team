@@ -9,60 +9,53 @@
 {% endblock %}
 
 {% block content %}
-{% comment %} <div class="container my-3"> {% endcomment %}
 <div class="user-info-box p-4 rounded shadow-sm m-5">
-    <h3 class="my-3 border-bottom pb-2 d-flex justify-content-center">회원가입</h3>
+    <h3 class="my-3 border-bottom pb-2 d-flex justify-content-center">회원정보 수정</h3>
     <div class="row">
         <div class="col-md-6">
-        <form method="post" action="">
-            {% csrf_token %}
-            {% comment %} <h4>👤 회원가입 </h4> {% endcomment %}
-            <div class="mb-3">
-                <label for="username">사용자 이름</label>
-                <input type="text" class="form-control" name="username" id="username" value="">
-            </div>
-            <div class="mb-3">
-                <label for="password1">비밀번호</label>
-                <input type="password" class="form-control" name="password1" id="password1" value="">
-            </div>
-            
-            <div class="mb-3">
-                <label for="password2">비밀번호 확인</label>
-                <input type="password" class="form-control" name="password2" id="password2" value="">
-            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <!-- 사용자 이름 (아이디) -->
+                <div class="mb-3">
+                    <label for="username">사용자 이름</label>
+                    <input type="text" class="form-control" name="username" id="username" value="{{ user.username }}" readonly>
+                </div>
 
-            <div class="mb-3">
-                <label for="email">이메일</label>
-                <input type="text" class="form-control" name="email" id="email" value="">
-            </div>
+                <!-- 이메일 (수정 불가) -->
+                <div class="mb-3">
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control" name="email" id="email" value="{{ user.email }}">
+                </div>
 
-            <div class="mb-3">
-                <label for="birthday">생일</label>
-                <input type="date" class="form-control" name="birthday" id="birthday" value="">
-            </div>
+                <!-- 생년월일 -->
+                <div class="mb-3">
+                    <label for="birthday">생년월일</label>
+                    <input type="date" class="form-control" name="birthday" id="birthday" value="{{ user.userdetail.birthday |date:'Y-m-d' }}">
+                </div>
         </div>
-            
+
         <div class="col-md-6">
-            <!-- 사용자 정보 입력 -->
+            <!-- 성별 -->
             <div class="mb-3">
                 <label class="form-label">성별</label>
                 <select class="form-select" id="gender" name="gender" onchange="togglePregnantCheckbox()">
-                    <option value="M">남성</option>
-                    <option value="F">여성</option>
+                    <option value="M" {% if user.userdetail.gender == 'M' %}selected{% endif %}>남성</option>
+                    <option value="F" {% if user.userdetail.gender == 'F' %}selected{% endif %}>여성</option>
                 </select>
             </div>
 
+            <!-- 임신 여부 (여성만 표시) -->
             <div class="mb-3 form-check" id="pregnant-check" style="display: none;">
-                <input type="checkbox" class="form-check-input" id="pregnant" name="is_pregnant">
+                <input type="checkbox" class="form-check-input" id="pregnant" name="is_pregnant" {% if user.userdetail.is_pregnant %}checked{% endif %}>
                 <label class="form-check-label" for="pregnant">임신 여부</label>
             </div>
-            
+
+            <!-- 건강 관심사 -->
             <h5>건강 관심사</h5>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="immunity" name="health_concerns" value="면역력 강화"> <label class="form-check-label" for="immunity">면역력 강화</label>
             </div>
             <div class="form-check">
-                {# value값 오타! '피부 건강' 으로 수정 필#}
                 <input class="form-check-input" type="checkbox" id="skin" name="health_concerns" value="피부 건강"> <label class="form-check-label" for="skin">피부 건강</label> 
             </div>
             <div class="form-check">
@@ -78,9 +71,13 @@
                 <input class="form-check-input" type="checkbox" id="stress" name="health_concerns" value="스트레스 관리"> <label class="form-check-label" for="stress">스트레스 관리</label>
             </div>
         </div>
-            
-            <button type="submit" class="btn btn-primary">회원가입하기</button>
+
+        <button type="submit" class="btn btn-primary mt-4">저장하기</button>
         </form>
+
+            <a href="{% url 'uauth:mypage' %}" class="btn btn-outline-gradient">
+                <i class="fas fa-user me-2"></i>마이페이지
+            </a>        
     </div>
 </div>
 {% endblock content %}
@@ -90,7 +87,7 @@
     function togglePregnantCheckbox() {
         const genderSelect = document.getElementById("gender");
         const pregnantDiv = document.getElementById("pregnant-check");
-        
+
         if (genderSelect.value === "F") {
             pregnantDiv.style.display = "block";
         } else {
@@ -99,7 +96,10 @@
         }
     }
 
-    // 초기 상태 반영
     document.addEventListener("DOMContentLoaded", togglePregnantCheckbox);
+</script>
+
+<script>
+    console.log("현재 로그인한 사용자: {{ user.username }}");
 </script>
 {% endblock script %}
