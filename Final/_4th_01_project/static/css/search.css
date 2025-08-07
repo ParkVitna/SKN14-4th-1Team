@@ -51,6 +51,11 @@
   border-radius: 8px;
   display: block;
   margin: 0 auto;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.search-result-area {
+  padding: 1.5rem 2rem 2rem 2rem; /* 위/오른쪽/아래/왼쪽 */
 }
 
 .image-container {
