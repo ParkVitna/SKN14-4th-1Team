@@ -1,12 +1,11 @@
 :root{
   --nw-green:#27AE60; 
   --nw-text:#1f2937; 
-  --nw-border:#e5e7eb;
+  --nw-border:#ffffff;
 }
 
-/* 업로드된 이미지 자체 크기 제한 */
 .uploaded-image {
-  width: 150px;      /* 정확하게 너비 지정 */
+  width: 150px;     
   height: auto;
   object-fit: contain;
   border-radius: 8px;
@@ -14,13 +13,14 @@
   margin: 0 auto;
 }
 
-/* 감싸는 카드 영역도 같이 줄이기 */
+
 .image-container {
   max-width: 100px;
+
 }
 
 .camera-btn {
-  background-color: var(--nw-green);
+  background-color: var(--nw-border);
   border: none;
   padding: 0.5rem;
   height: 38px;   
@@ -31,9 +31,14 @@
   justify-content: center;
   transition: background-color 0.3s ease;
   font-size: 1.3rem;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .camera-btn:hover {
-  background-color: #1e8c4a;
+  background-color: #edebeb;
+}
+
+
+.accordion-item:last-child {
+  margin-bottom: 1rem;
 }
