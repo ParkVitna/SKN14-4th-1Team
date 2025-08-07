@@ -16,6 +16,8 @@ def logout(request):
 
 @transaction.atomic
 def signup(request):
+    signup_failed = False  # 실패 여부 플래그
+
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
@@ -39,25 +41,32 @@ def signup(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             authenticated_user = auth.authenticate(username=username, password=password)
-            
-            if authenticated_user is not None:
-                auth.login(request, authenticated_user)
 
-            return redirect('app:main')
+            if authenticated_user is not None:
+                print("회원가입 성공 진입")
+                auth.login(request, authenticated_user)
+                return redirect('app:main')  # 여기가 로그인 후 리디렉션되는 URL 네임스페이스
+
+            # 로그인 실패 시 (거의 발생하지 않지만 대비)
+            signup_failed = True
+
+        else:
+            signup_failed = True  # 유효성 검증 실패 시 True
+
     else:
         form = UserForm()
 
-    return render(request, 'uauth/signup.html', {'form': form})
+    return render(request, 'uauth/signup.html', {'form': form, 'signup_failed': signup_failed})
 
 
-def check_usermail(request):
+
+
+def check_username(request):
     """
-    회원가입시 email 중복여부를 검사하는 ajax처리 뷰함수
+    회원가입시 username 중복여부를 검사하는 ajax처리 뷰함수
     """
-    print("check_usermail called")
-    useremail = request.GET.get('email')
-    # email 사용가능 여부 
-    available = User.objects.filter(email=useremail).exists() == False
-    print(f"{useremail=}, {available=}")
+    username = request.GET.get('username')
+    # username 사용가능 여부 
+    available = User.objects.filter(username=username).exists() == False
 
     return JsonResponse({'available': available})

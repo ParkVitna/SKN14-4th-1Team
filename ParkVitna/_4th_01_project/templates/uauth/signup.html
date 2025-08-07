@@ -88,7 +88,14 @@
 {% endblock content %}
 
 {% block script %}
+
 <script>
+    const signupFailed = {{ signup_failed|yesno:"true,false" }};
+    
+    if (signupFailed) {
+        alert("회원가입에 실패했습니다. 너무 흔한 비밀번호는 사용할 수 없습니다.");
+    }
+
     function togglePregnantCheckbox() {
         const genderSelect = document.getElementById("gender");
         const pregnantDiv = document.getElementById("pregnant-check");
@@ -125,30 +132,30 @@
         password1.parentNode.appendChild(pw1Error);
         password2.parentNode.appendChild(pw2Error);
 
-        let isEmailAvailable = true;  // 이메일 중복 결과 상태 저장
+        let isUsernameAvailable = true;  // 사용자 이름 중복 결과 상태 저장
 
-        // 이메일 ajax 중복 검사
-        useremail.addEventListener("input", function () {
-            const uemail = useremail.value.trim();
+        // 사용자 이름 ajax 중복 검사
+        username.addEventListener("input", function () {
+            const uname = username.value.trim();
 
-            emailError.textContent = "";
-            useremail.classList.remove("is-invalid");
-            isEmailAvailable = true;
+            usernameError.textContent = "";
+            username.classList.remove("is-invalid");
+            isUsernameAvailable = true;
 
-            if (uemail.length > 3 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(uemail)) {
-                fetch(`{% url 'uauth:check_usermail' %}?email=${encodeURIComponent(uemail)}`)
+            if (uname.length > 0) {
+                fetch(`{% url 'uauth:check_username' %}?username=${encodeURIComponent(uname)}`)
                     .then(response => response.json())
                     .then(data => {
                         if (!data.available) {
-                            emailError.textContent = "이미 사용 중인 이메일입니다.";
-                            useremail.classList.add("is-invalid");
-                            isEmailAvailable = false;
+                            usernameError.textContent = "이미 사용 중인 사용자 이름입니다.";
+                            username.classList.add("is-invalid");
+                            isUsernameAvailable = false;
                         }
                     })
                     .catch(() => {
-                        emailError.textContent = "이메일 확인 중 오류가 발생했습니다.";
-                        useremail.classList.add("is-invalid");
-                        isEmailAvailable = false;
+                        usernameError.textContent = "사용자 이름 확인 중 오류가 발생했습니다.";
+                        username.classList.add("is-invalid");
+                        isUsernameAvailable = false;
                     });
             }
         });
@@ -177,6 +184,10 @@
                 usernameError.textContent = "사용자 이름은 최소 1자 이상이어야 합니다.";
                 username.classList.add("is-invalid");
                 hasError = true;
+            } else if (!isUsernameAvailable) {
+                usernameError.textContent = "이미 사용 중인 사용자 이름입니다.";
+                username.classList.add("is-invalid");
+                hasError = true;
             }
 
             if (uemail.length < 1) {
@@ -185,10 +196,6 @@
                 hasError = true;
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(uemail)) {
                 emailError.textContent = "유효한 이메일 형식이 아닙니다.";
-                useremail.classList.add("is-invalid");
-                hasError = true;
-            } else if (!isEmailAvailable) {
-                emailError.textContent = "이미 사용 중인 이메일입니다.";
                 useremail.classList.add("is-invalid");
                 hasError = true;
             }
