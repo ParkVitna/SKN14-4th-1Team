@@ -1,4 +1,5 @@
 import os
+import json
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from .ocr_llm import OCR_LLM
