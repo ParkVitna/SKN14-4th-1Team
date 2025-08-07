@@ -11,7 +11,7 @@
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     {# 추후 마이페이지로 이동 #}
-                    <a class="nav-link" href=""> 
+                    <a class="nav-link" href="{% url 'uauth:mypage' %}"> 
                         <i class="fa-solid fa-user me-1"></i>{{ user.username }} 님
                     </a>
                 </li>
