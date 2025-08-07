@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from app.models import ChatMessage
 
 
 
@@ -17,6 +18,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 def logout(request):
+    session_id = request.session.session_key
+    if session_id:
+        ChatMessage.objects.filter(session_id=session_id).delete()
     auth.logout(request)
     return redirect('app:home')
 
@@ -75,7 +79,6 @@ def check_username(request):
     available = User.objects.filter(username=username).exists() == False
 
     return JsonResponse({'available': available})
-
 
 
 # 마이페이지
