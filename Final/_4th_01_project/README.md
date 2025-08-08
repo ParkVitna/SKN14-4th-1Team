@@ -103,9 +103,9 @@ DECODING_KEY=your_decoding_key
 ### 3️⃣ FAISS 인덱스 파일 다운로드
 아래 링크를 통해 `index.faiss`와 `index.pkl` 파일을 다운로드하고, `Final/_4th_01_project/app/faiss_index`에 포함시켜 주세요:
 
-👉 [index.faiss](https://drive.google.com/file/d/12hBmF6i9Fj9Ils0EQV0gC7a8QR5EMcHa/view?usp=sharing)
+👉 [index.faiss](https://drive.google.com/file/d/1EqcaOKzofXo-L3637M2NxHn7PspBYGMM/view)
 
-👉 [index.pkl](https://drive.google.com/file/d/1p6yoErMdihSAURiuySzpTsb9bYk4iGMn/view?usp=sharing)
+👉 [index.pkl](https://drive.google.com/file/d/11lK7mC9jYJcl2ZZIqS18wR803C2LKQVE/view)
 
 
 ### 4️⃣ 프로젝트 디렉토리 구조
