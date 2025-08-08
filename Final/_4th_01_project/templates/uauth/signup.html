@@ -9,14 +9,12 @@
 {% endblock %}
 
 {% block content %}
-{% comment %} <div class="container my-3"> {% endcomment %}
 <div class="user-info-box p-4 rounded shadow-sm m-5">
     <h3 class="my-3 border-bottom pb-2 d-flex justify-content-center">회원가입</h3>
     <div class="row">
         <div class="col-md-6">
         <form method="post" action="">
             {% csrf_token %}
-            {% comment %} <h4>👤 회원가입 </h4> {% endcomment %}
             <div class="mb-3">
                 <label for="username">사용자 이름*</label>
                 <input type="text" class="form-control" name="username" id="username" value="">
