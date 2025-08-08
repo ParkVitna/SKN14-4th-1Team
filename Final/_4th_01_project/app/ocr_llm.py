@@ -25,7 +25,6 @@ class OCR_LLM():
         text = result_list[0]['rec_texts']
         poly = result_list[0]['rec_polys']
         res = self.group_text_by_y(text, poly)
-        print(res)
 
         return list(res)
     

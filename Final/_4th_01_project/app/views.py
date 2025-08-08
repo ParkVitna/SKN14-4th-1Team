@@ -85,8 +85,6 @@ def search(request):
             except Exception as e:
                 response_text = f"에러 발생: {str(e)}"
 
-        # print("🔍 response_text:", response_text)
-
         product_list = []
 
         if response_text:
