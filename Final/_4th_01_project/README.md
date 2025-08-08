@@ -16,10 +16,10 @@
 * ⚙️ 설치 및 환경 설정
 * 🗂 데이터 및 모델 구성
 * ⚙️ 시스템 아키텍처
+* ⚙️ DB 설계도
 * 🧠 챗봇 질의 흐름
 * 💬 주요 기능 (Streamlit UI)
-* 📊 추천 시스템 구성
-* 📈 향후 개선 방향
+* 📈 향후 개선 및 향후 과제
 * 🗣️ 프로젝트 회고
 
 ---
@@ -35,14 +35,14 @@
 ---
 
 ## 🛠️ 기술 스택
-
-| 카테고리           | 기술                                                                                                                                                                                                                                                       |
+| 카테고리           | 기술                                                                                          |
 | -------------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Language**   | ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white) |
 | **Framework**  | ![Django](https://img.shields.io/badge/Django-092e20?logo=Django&logoColor=) |
 | **LLM** | ![OpenAI](https://img.shields.io/badge/OpenAI-GPT4-412991?logo=openai&logoColor=white) |
 | **Embedding**  | ![OpenAIEmbeddings](https://img.shields.io/badge/OpenAI_Embeddings-green?logo=openai&logoColor=white) |
 | **Vector DB** | ![Faiss](https://img.shields.io/badge/Faiss-005571?logo=facebook&logoColor=white) |
+| **Django DB** | ![MySQL](https://img.shields.io/badge/MySQL-00758f?logo=MySQL&logoColor=white) |
 | **Tools**      | ![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000?logo=notion&logoColor=white) |
 
 ---
@@ -96,17 +96,13 @@ pip install -r requirements.txt
 ### 2️⃣ 환경 변수 (.env) 설정
 .env 파일을 프로젝트 루트에 생성하고, 아래 항목들을 입력합니다.
 ```
-PINECONE_API_KEY=your_pinecone_key
 OPENAI_API_KEY=your_openai_key
 DECODING_KEY=your_decoding_key
-GOOGLE_API_KEY=your_google_api_key
-GOOGLE_CSE_ID=your_google_cse_id
 ```
 
 ### 3️⃣ FAISS 인덱스 파일 다운로드
-아래 링크를 통해 `index.faiss`와 `index.pkl` 파일을 다운로드하고, `~~~수정수정~~~/faiss_index`에 포함시켜 주세요:
+아래 링크를 통해 `index.faiss`와 `index.pkl` 파일을 다운로드하고, `Final/_4th_01_project/app/faiss_index`에 포함시켜 주세요:
 
-수정 필~~
 👉 [index.faiss](https://drive.google.com/file/d/12hBmF6i9Fj9Ils0EQV0gC7a8QR5EMcHa/view?usp=sharing)
 
 👉 [index.pkl](https://drive.google.com/file/d/1p6yoErMdihSAURiuySzpTsb9bYk4iGMn/view?usp=sharing)
@@ -114,13 +110,33 @@ GOOGLE_CSE_ID=your_google_cse_id
 
 ### 4️⃣ 프로젝트 디렉토리 구조
 ```
-SKN14-4th-1Team/
-│
-├── 수정 예정!!
-├── README.md
-└── requirements.txt
-```
+C:\WORKSPACES\SKN14-4TH-1TEAM\FINAL
+└─_4th_01_project
+    ├─app
+    │  ├─faiss_index
+    │  ├─management
+    │  │  └─commands
+    │  ├─migrations
+    │  │  └─__pycache__
+    │  └─__pycache__
+    ├─images
+    ├─media
+    ├─sql
+    ├─static
+    │  └─css
+    ├─templates
+    │  ├─app
+    │  ├─layout
+    │  └─uauth
+    ├─uauth
+    │  ├─migrations
+    │  │  └─__pycache__
+    │  └─__pycache__
+    └─_4th_01_project
+        └─__pycache__
 ---
+```
+
 
 ## 💡 실행
 
@@ -166,6 +182,7 @@ python manage.py runserver
 
 * **Embedding**: OpenAI Embeddings
 * **Vector Store**: Faiss
+* **Django-DB**: Mysql
 
 ### ✅ 건강기능식품 검색
 * 이미지 검색: 이미지에서 텍스트(OCR) 추출 → LLM을 통해 가장 주요단어 5개 추출 → RAG 기반 정보 검색
@@ -173,39 +190,45 @@ python manage.py runserver
 
 ### ✅ RAG 기반 맞춤형 추천 Q&A
 * LangChain 기반 RAG 구조 (문서 임베딩 → 유사도 검색 → GPT 응답 생성)
+* session_id별 대화 히스토리를 저장·기억하여 맥락 기반 응답 생성
 * 주제 확장 및 문서 기반 출처 제시
-* 사용자 입력 → 웹 검색 → 이미지 검색
-* Google 이미지 검색읕 통해 제품 정보와 사진을 함께 제공
+ 
 
 ### ✅ 회원가입 & 로그인 & 마이페이지
 * 회원가입 시, 맞춤 서비스 제공을 위한 생년월일, 성별, 건강관심사 입력
 * 회원가입 & 로그인 유효성 검사
-* 마이페이지에서 회원 정보 확인 및
+* 마이페이지에서 회원 정보 확인 및 수정
 
 ---
 
-## ⚙️ 시스템 아키텍처
- <img src="./images/architecture.png" width="350px">
+##  ⚙️ 시스템 아키텍처
+ <img src="./images/architecture_4th.png" width="350px">
+
+##  ⚙️ DB 설계도
+ <img src="./images/DB.png" width="250px">
 
 ---
 
 ## 🧠 챗봇 질의 흐름
-
-| 단계 | 설명                                                                                   |
+| 단계 | 설명                                                                                  |
 |------|--------------------------------------------------------------------------------------|
-| 📝 **1. 질문 입력** | 사용자가 UI에서 질문 입력<br>예: *“피로 회복에 좋은 영양제는?”*                                  |
+| 📝 **1. 질문 입력** | 사용자가 UI에서 질문 입력<br>예: “피로 회복에 좋은 영양제는?” → 시작 시 참고할 수 있도록 6개의 사전 구성 건강 보충제 질문 제공                                 |
 | 🔍 **2. 문서 검색** | 사용자 질문 + 프로필(나이/성별/관심사 등)을 결합해 의미 확장<br>LangChain Retriever가 Faiss에서 유사 문서 **3건** 검색 |
-| 🤖 **3. GPT 응답 생성** | 검색된 문서를 `context`로 활용하여 GPT가 응답 생성<br>정확한 형식과 문서 기반 지식만 사용                           |
+| 🤖 **3. GPT 응답 생성** | 검색된 문서를 `context`로 활용하여 GPT가 응답 생성<br>`session_id`별 대화 내용을 기억하여 맥락 반영<br>정확한 형식과 문서 기반 지식만 사용                           |
 | 📢 **4. 응답 출력** | 응답을 화면에 출력<br>필요 시 근거 문서 정보 및 주의사항도 함께 제공<br>※ 항상 마지막에 “전문가 상담 권장” 문구 포함             |
 
 
 ---
 
-## 💬 주요 기능 (Streamlit UI)
+## 💬 주요 기능 (UI)
 
 ### 📌 메인화면
+<img src="./images/00_home.png" width="500px">
+<img src="./images/01_main.png" width="500px">
 
 ### 📌 건강기능식품 검색
+<img src="./images/02_ocr.png" width="500px">
+
 * 모든 이용자 사용 가능 페이지
 * 이미지와 텍스트로 건강기능식품 검색
 * 이미지 업로드 → 텍스트(OCR) 추출 → RAG 기반 정보 검색  
@@ -213,50 +236,28 @@ python manage.py runserver
 * 텍스트 인식과 문서 검색을 결합한 직관적인 추천 방식
 
 
-
 ### 📌 RAG 기반 맞춤형 추천 Q&A
+<img src="./images/03_Q&A.png" width="500px">
+
 * 로그인한 회원만 이용 가능 페이지
   : 회원가입할 때, 입력받은 사용자 정보로 맞춤형 추천 
 * 샘플 질문 버튼 제공
 * 사용자 입력 기반 RAG 흐름 실행
 
 
-
 ### 📌 회원가입 & 로그인 & 마이페이지
+<table>
+  <tr>
+    <td><img src="./images/05_signup.png" width="400px"></td>
+    <td><img src="./images/06_login.png" width="400px"></td>
+  </tr>
+  <tr>
+    <td><img src="./images/07_mypage.png" width="400px"></td>
+    <td><img src="./images/08_mypage_edit.png" width="400px"></td>
+  </tr>
+</table>
+
 * 사용자 정보 입력 (나이, 성별, 임신 여부, 건강 관심사)
-
-
-=====아래는 3차: 삭제 예정=====
-### 📌 메인화면
-<img src="./images/03.png" width="500px">
-
-### 📌 질의응답 (RAG + LLM 기반)
-<img src="./images/01.png" width="500px">
-* 샘플 질문 버튼 제공
-* 사용자 입력 기반 RAG 흐름 실행
-
-### 📌 맞춤 추천 (Tavily 기반)
-<img src="./images/02.png" width="500px">
-
-* 사용자 정보 입력 (나이, 성별, 임신 여부, 관심 건강 주제)
-* 관심사에 따라 쿼리 생성 → ReAct 기반 검색 실행
-* 결과를 카드 형태로 출력 (제품명, 가격, 성분, 효과 등 시각화)
-
-### 📌 사진 검색 및 분석 (OCR +  RAG 기반)
-<img src="./images/04.png" width="500px">
-
-* 이미지 업로드 → 텍스트(OCR) 추출 → RAG 기반 정보 검색  
-* 제품명 등 키워드로 효능·성분·주의사항 자동 안내  
-* 텍스트 인식과 문서 검색을 결합한 직관적인 추천 방식
-
----
-
-## 📊 추천 시스템 구성
-
-* LangChain ReAct Agent 사용
-* Prompt 내 명확한 JSON 포맷 요구
-* GPT 응답 → Python에서 JSON 파싱 후 1\~3개 제품 렌더링
-* 제품 이미지, 성분, 기대 효과, 복용법, 주의사항 등 시각화 구성
 
 
 ---
