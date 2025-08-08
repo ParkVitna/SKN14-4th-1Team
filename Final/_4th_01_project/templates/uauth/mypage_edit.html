@@ -18,7 +18,7 @@
                 <!-- 사용자 이름 (아이디) -->
                 <div class="mb-3">
                     <label for="username">사용자 이름</label>
-                    <input type="text" class="form-control" name="username" id="username" value="{{ user.username }}" readonly>
+                    <input type="text" class="form-control" name="username" id="username" value="{{ user.username }}" disabled>
                 </div>
 
                 <!-- 이메일 -->
@@ -95,7 +95,6 @@
             document.getElementById("pregnant").checked = false;
         }
     }
-    console.log("현재 로그인한 사용자: {{ user.username }}");
 
     document.addEventListener("DOMContentLoaded", function () {
         togglePregnantCheckbox();

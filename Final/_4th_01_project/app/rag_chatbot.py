@@ -1,11 +1,9 @@
-import os, re
-from langchain_pinecone import PineconeVectorStore
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from pinecone import Pinecone
-from langchain_core.prompts import PromptTemplate
-from .ocr_llm import OCR_LLM
-from langchain.vectorstores import FAISS
+import os
 from dotenv import load_dotenv
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain.vectorstores import FAISS
+from .ocr_llm import OCR_LLM
 from .config import load_config
 from .utils import get_user_profile_summary
 
@@ -35,7 +33,6 @@ class RAG_Chatbot():
         self.llm = ChatOpenAI(openai_api_key=self.openai_api_key, temperature=0.3, model_name=self.openai_model_name, max_tokens=1024)
 
 
-    # def run(self, question="", use_ocr=False, search_mode=False, img_file=None, temperature=0.3, max_token=1024, user=None): 
     def run(self, question="", use_ocr=False, search_mode=False, img_file=None, user=None, chat_history=None):
         
         if user != None:
@@ -111,17 +108,18 @@ class RAG_Chatbot():
                 - "피로에 좋은 영양제 추천해줘"  
                 - "여성 건강에 맞는 영양제 뭐가 좋아?"  
             - 단순 효능/부작용/상담 질문에는 제품 추천 없이 안내만 해주세요.
+            - **추천 의도가 없는 말에는 제품을 절대 제품 추천 하지 마세요.**
 
             - 제품 추천시에는, 제품명·제조사·효능·주의사항 등 **문서에 있는 정보만** 구체적으로 안내합니다.
             - 문서에 없는 항목은 "문서에 정보 없음"이라고 적으세요.
 
-            - 답변 마지막에 꼭 붙이세요:  
+            - 영양제 추천 답변 마지막에만 꼭 붙이세요:  
             "건강기능식품은 의약품이 아니므로, 섭취 전 반드시 전문가와 상담하시길 권장드립니다."
                                                      
 
             [Example - Output Indicator]
             예시:
-            ---
+
             안녕하세요! {user_summary}
             요즘 건강이나 생활에 여러 고민이 있으셨던 것 같아요. 궁금하신 내용을 바탕으로 아래와 같이 안내드릴게요.
 
@@ -152,6 +150,7 @@ class RAG_Chatbot():
             """)
 
         return system_prompt.format(context=context, question=question, user_summary=user_summary, history=history)
+  
     
     def prompt_ocr(self, question, context):
 

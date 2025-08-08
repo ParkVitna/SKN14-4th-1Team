@@ -54,7 +54,6 @@ def signup(request):
             authenticated_user = auth.authenticate(username=username, password=password)
 
             if authenticated_user is not None:
-                print("회원가입 성공 진입")
                 auth.login(request, authenticated_user)
                 return redirect('app:main')  # 여기가 로그인 후 리디렉션되는 URL 네임스페이스
 

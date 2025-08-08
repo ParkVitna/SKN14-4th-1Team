@@ -9,7 +9,7 @@
         <div class="main-container">
             <!-- Page Header -->
             <div class="page-header">
-                <h1><i class="fas fa-comments me-3"></i>질의응답 시스템</h1>
+                <h1><i class="fas fa-comments me-3"></i>맞춤형 추천 Q&A</h1>
                 <p class="lead mb-0">건강기능식품에 대한 궁금증을 해결해드립니다</p>
             </div>
 
@@ -113,7 +113,7 @@
         const typingIndicator = document.getElementById('typingIndicator');
         const sampleQuestions = document.querySelectorAll('.sample-question');
 
-////////// CSRF 토큰 가져오기 /////수정
+        // CSRF 토큰 가져오기
         function getCSRFToken() {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -128,7 +128,6 @@
             }
             return cookieValue;
         }
-///////////////////////////////////
 
         // Event listeners
         sendButton.addEventListener('click', sendMessage);
@@ -162,7 +161,7 @@
                     'X-CSRFToken': getCSRFToken()
                 },
                 body: JSON.stringify({ question: message, use_ocr: false }),
-                credentials: 'same-origin'   // 이 줄 추가!
+                credentials: 'same-origin'   
             })
             .then(response => {
                 const contentType = response.headers.get("content-type");
